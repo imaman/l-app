@@ -1,0 +1,80 @@
+<html>
+
+<head>
+  <style>
+    .t {
+      -webkit-text-fill-color: white;
+      /* Will override color (regardless of order) */
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: black;
+    }
+
+    .s {
+      color: pink
+    }
+
+    .item-a {
+      grid-area: header;
+    }
+
+    .item-b {
+      grid-area: main;
+    }
+
+    .item-c {
+      grid-area: sidebar;
+    }
+
+    .item-d {
+      grid-area: footer;
+    }
+
+    .container {
+      font-size:36px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      grid-template-rows: auto;
+      grid-template-areas:
+        ". . header . ."
+        "sidebar . main main main"
+        "footer footer footer footer footer";
+    }
+  </style>
+</head>
+
+<body dir="rtl">
+  <div class="container">
+    <div class="item-a">
+      <h1 style="font-size:115px; margin: 2px;">
+        <span class="s">י</span>
+        <span class="t">צ</span>
+        <span class="s">י</span>
+        <span class="t">ר</span>
+        <span class="s">ה</span>
+      </h1>
+    </div>
+    <!-- <div id="main" style="width: 100%; font-size:36px; line-height: 1.5em;"> -->
+    <div class="item-c">
+      <ul style="grid-area: b" ;>
+        <li>
+          <h4>רעיון מספר 1</h4>
+        </li>
+        <li>
+          <h4>רעיון מספר 2</h4>
+        </li>
+      </ul>
+    </div>
+    <div class="item-b">
+      <h4>איך לעשות את רעיון מספר 1</h4>
+      <textarea cols="80" rows="10"></textarea>
+      <h4>איך לעשות את רעיון מספר 2</h4>
+      <textarea cols="80" rows="10"></textarea>
+    </div>
+  </div>
+</body>
+
+</html>
+
+
+

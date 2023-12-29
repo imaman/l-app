@@ -28,7 +28,7 @@
 <script>
 const voice = window.speechSynthesis.getVoices().find(x => x.name === 'Google US English')
 
-const words = {
+const theaters = [{
   "one": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/one-706897_1280.jpg" },
   "two": { url: "https://cdn.pixabay.com/photo/2012/05/04/10/18/two-47085_1280.png" },
   "three": { url: "https://c8.alamy.com/comp/FE0XKN/the-number-three-as-a-polished-golden-object-FE0XKN.jpg" },
@@ -38,12 +38,10 @@ const words = {
   "seven": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/seven-706891_960_720.jpg" },
   "eight": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/eight-706890_1280.jpg" },
   "nine": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/nine-706889_960_720.jpg" },
-  "ten": { url: "https://static.vecteezy.com/system/resources/previews/008/489/743/original/number-ten-10-red-number-png.png" },
-  "balloon": { url: "https://media.istockphoto.com/id/1281511645/vector/bunch-of-inflatable-balloons-in-cartoon-style-isolated-on-white-background-vector.jpg?s=612x612&w=0&k=20&c=VngxtS7KHH_VhF2HCaPc3BiBAs9izXXtX-5SI6UpRpo=" },
+  "ten": { url: "https://static.vecteezy.com/system/resources/previews/008/489/743/original/number-ten-10-red-number-png.png" }},
+  {
   "bed": { url: "https://media.istockphoto.com/id/1149521461/vector/wooden-bed-with-pillow.jpg?s=612x612&w=0&k=20&c=9fu6sv92j5_7YY9UEyVChCDOojnbJnTjv-wXyKeGt5Q=" },
-  "black": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4vD_hTkOqVLh4SMnHxvCc9DkqL1_zY-uuzWVHNoh2Ck7egAE9Hx7D-GvKr5q2C4t-R8g&usqp=CAU" },
-  "blue": { url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAA1BMVEUAAP+KeNJXAAAASElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AcUIAAFkqh/QAAAAAElFTkSuQmCC" },
-  "brown": { url: "https://img.freepik.com/free-photo/brown-concrete-wall-with-scratches-vector_53876-143109.jpg?size=626&ext=jpg" },
+  "balloon": { url: "https://media.istockphoto.com/id/1281511645/vector/bunch-of-inflatable-balloons-in-cartoon-style-isolated-on-white-background-vector.jpg?s=612x612&w=0&k=20&c=VngxtS7KHH_VhF2HCaPc3BiBAs9izXXtX-5SI6UpRpo=" },
   "doctor": { url: "https://static.vecteezy.com/system/resources/previews/002/896/807/non_2x/female-doctor-using-her-digital-tablet-free-vector.jpg" },
   "fall off": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCZN4uXCgkJxbV8DQslDz-wf5yZV6kw5qiXlDQCpW7DsQH_dlhx8ugFFG8I5oBms9wg2g&usqp=CAU" },
   "green": { url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACoCAMAAABt9SM9AAAAA1BMVEVl/wB6QsljAAAAR0lEQVR4nO3BAQEAAACCIP+vbkhAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO8GxYgAAb0jQ/cAAAAASUVORK5CYII=" },
@@ -51,15 +49,22 @@ const words = {
   "listen": { url: "https://images.twinkl.co.uk/tw1n/image/private/t_630/u/ux/active-listening-wiki_ver_1.png" },
   "monkey": { url: "https://pics.craiyon.com/2023-06-16/f99a664cc9354f73bc019707f658316c.webp" },
   "mother": { url: "https://cdn2.vectorstock.com/i/1000x1000/70/61/dark-skinned-mother-and-baby-vector-23827061.jpg" },
+  "quiet": { url: "https://www.teachingchannel.com/wp-content/uploads/2023/05/ways-to-quiet-classroom.jpg" }
+  },
+  {
+  "black": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4vD_hTkOqVLh4SMnHxvCc9DkqL1_zY-uuzWVHNoh2Ck7egAE9Hx7D-GvKr5q2C4t-R8g&usqp=CAU" },
+  "blue": { url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAA1BMVEUAAP+KeNJXAAAASElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AcUIAAFkqh/QAAAAAElFTkSuQmCC" },
+  "brown": { url: "https://img.freepik.com/free-photo/brown-concrete-wall-with-scratches-vector_53876-143109.jpg?size=626&ext=jpg" },
   "orange": { url: "https://t4.ftcdn.net/jpg/05/06/41/89/360_F_506418953_5R5MQsN4UJ4hLgqnKlltS44wbQ33LhIU.jpg" },
   "pink": { url: "https://htmlcolorcodes.com/assets/images/colors/pastel-pink-color-solid-background-1920x1080.png" },
   "purple": { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Purple_website.svg/1200px-Purple_website.svg.png" },
-  "quiet": { url: "https://www.teachingchannel.com/wp-content/uploads/2023/05/ways-to-quiet-classroom.jpg" },
   "red": { url: "" },
-  "sit down": { url: "" },
-  "stand up": { url: "" },
   "white": { url: "" },
   "yellow": { url: "" },
+  },
+  {
+  "sit down": { url: "" },
+  "stand up": { url: "" },
   "baby": { url: "" },
   "ball": { url: "" },
   "boy": { url: "" },
@@ -134,7 +139,7 @@ const words = {
   "television": { url: "" },
   "test": { url: "" },
   "woman": { utl: "" }
-}
+}]
 
 window.addEventListener('load', () => {
   const d = document.getElementById('d')
@@ -145,15 +150,26 @@ window.addEventListener('load', () => {
   //   d.appendChild(toAdd)
   // }
 
-  render(['jump', 'listen', 'fall off', 'doctor'])
+  render(theaters[Math.trunc(Math.random() * theaters.length)])
 })
 
-function render(chosenWords) {
+function shuffleStrings(strings) {
+  const arr = strings.map(w => ({w, rand: self.crypto.randomUUID()}))
+  arr.sort((lhs, rhs) => lhs.rand.localeCompare(rhs.rand))
+  return arr.map(at => at.w)
+}
+
+function choose(theater) {
+  return shuffleStrings(Object.keys(theater)).slice(0, 4)
+}
+
+function render(theater) {
   const mapping = {}
+  const chosenWords = choose(theater)
   for (const at of chosenWords) {
     const img = document.createElement('img')
     img.id = `image-${at}`
-    img.setAttribute('src', words[at].url)
+    img.setAttribute('src', theater[at].url)
     img.setAttribute('width', "120")
     img.setAttribute('height', "120")
     img.style.padding = "5px"
@@ -166,7 +182,11 @@ function render(chosenWords) {
       ev.dataTransfer.setData("text", ev.target.id);
     })
     document.getElementById('images').appendChild(img)
-    
+  }
+
+  const shuffled = shuffleStrings(chosenWords)
+  console.log(`chosenWords=${JSON.stringify(chosenWords)}, shuffeled=${JSON.stringify(shuffled)}`)
+  for (const at of shuffled) {  
     const w = document.createElement('div')
     w.style.marginTop = '60px'
     w.style.marginBottom = '60px'

@@ -137,7 +137,7 @@ const theaters = [{
   "talk": { url: "https://clipart-library.com/2023/107-1070538_images-people-talking-clipart-best-clip-art.png" },
   "television": { url: "https://www.shutterstock.com/image-vector/tv-remote-control-flat-illustration-260nw-1378653383.jpg" },
   "test": { url: "https://tressays.files.wordpress.com/2015/09/test-clip-art-cpa-school-test.png" },
-  "woman": { utl: "https://static.vecteezy.com/system/resources/previews/009/380/330/original/woman-face-expression-clipart-design-illustration-free-png.png" },
+  "woman": { url: "https://static.vecteezy.com/system/resources/previews/009/380/330/original/woman-face-expression-clipart-design-illustration-free-png.png" },
   // "let's": { url: "" },
   // "in": { url: "" },
   // "near": { url: "" },
@@ -149,18 +149,18 @@ const theaters = [{
 
 window.addEventListener('load', () => {
   const d = document.getElementById('d')
-  for (const words of theaters) {
-    for (const w of Object.keys(words)) {
-      const entry = words[w]      
-      if (entry.url) {
-        continue
-      }
-      const toAdd = document.createElement('div')
-      toAdd.style.marginBottom = "16px";
-      toAdd.innerHTML = `<a target="_blank" rel="noopener noreferrer" href="https://www.google.com/search?q=image+${w}+clipart&sclient=img&source=hp&uact=5&tbm=isch">${w}</a>`
-      d.appendChild(toAdd)
-    }
-  }
+  // for (const words of theaters) {
+  //   for (const w of Object.keys(words)) {
+  //     const entry = words[w]      
+  //     if (entry.url) {
+  //       continue
+  //     }
+  //     const toAdd = document.createElement('div')
+  //     toAdd.style.marginBottom = "16px";
+  //     toAdd.innerHTML = `<a target="_blank" rel="noopener noreferrer" href="https://www.google.com/search?q=image+${w}+clipart&sclient=img&source=hp&uact=5&tbm=isch">${w}</a>`
+  //     d.appendChild(toAdd)
+  //   }
+  // }
 
   render(theaters[Math.trunc(Math.random() * theaters.length)])
 })

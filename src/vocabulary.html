@@ -24,11 +24,22 @@
       background-color: chocolate
     }
 
+    .zone {
+      display: block;
+      text-align: center;
+      border-color: peru;
+      background-color: peru;
+      border-style: solid;
+      border-radius: 6px;
+    }
+
     #container {
       /* background-color: cadetblue; */
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 2fr 2fr 1fr 2fr 2fr;
       grid-template-rows: 1fr 1fr 1fr 1fr;
+      row-gap: 15px;
+      column-gap: 10px;
     }
   </style>
 
@@ -74,38 +85,14 @@ function render(theater) {
   const chosenWords = choose(theater)
 
   const container = document.getElementById('container')
-  chosenWords.forEach((at, i) => {
-    const img = document.createElement('img')
-    img.id = `image-${at}`
-    img.setAttribute('src', theater[at].url)
-    img.setAttribute('width', "120")
-    img.setAttribute('height', "120")
-    img.style.borderColor = "purple"
-    img.style.borderStyle = "solid"
-    img.style.borderRadius = "12px"
-    img.style.gridColumn = "3 / span 1"
-    img.style.gridRow = `${i + 1} / span 1`
-    img.setAttribute('draggable', 'true')
-    img.addEventListener('dragstart', ev => {
-      ev.dataTransfer.setData("text", ev.target.id);
-    })
-    container.appendChild(img)
-    // .getElementById('images').appendChild(img)
-  })
 
   const shuffled = shuffleStrings(chosenWords)
   console.log(`chosenWords=${JSON.stringify(chosenWords)}, shuffeled=${JSON.stringify(shuffled)}`)
   shuffled.forEach((at, i) => {
-    const w = document.createElement('div')
-    w.style.marginTop = '60px'
-    w.style.marginBottom = '60px'
-
     const button = document.createElement('div')
     button.id = `button-${at}`
-    // button.style.display = 'inline-block'
-    // button.style.verticalAlign = "middle"
-    // button.style.lineHeight = '120px'
-    button.innerText = '🗣️'
+    button.classList.add('button')
+    button.innerText = `🗣️ ${at}`
     button.style.borderColor = 'purple'
     button.style.borderStyle = 'solid'
     button.style.borderRadius = '6px'
@@ -113,7 +100,7 @@ function render(theater) {
 
     button.style.gridColumn = "1 / span 1"
     button.style.gridRow = `${i + 1} / span 1`
-    button.style.justifySelf = 'center'
+    button.style.justifySelf = 'right'
     button.style.alignSelf = 'center'
 
     button.addEventListener('click', () => {
@@ -125,21 +112,19 @@ function render(theater) {
       speechSynthesis.speak(utterance);
     })
 
-    const landingZone = document.createElement('span')
-    landingZone.id = `zone-${at}`
-    landingZone.style.display = 'inline-block'
-    landingZone.style.verticalAlign = "middle"
-    landingZone.style.backgroundColor = '#FF5733'
-    landingZone.style.lineHeight = '120px'
-    landingZone.style.width = '120px'
-    landingZone.style.height = '120px'
-    landingZone.style.marginLeft = '48px'
+    const decisionZone = document.createElement('span')
+    decisionZone.id = `zone-${at}`
+    decisionZone.classList.add('zone')
+    decisionZone.style.gridColumn = "2 / span 1"
+    decisionZone.style.gridRow = `${i + 1} / span 1`
+    decisionZone.style.justifySelf = 'stretch'
+    decisionZone.style.alignSelf = 'stretch'
 
-    landingZone.addEventListener('dragover', ev => {
+    decisionZone.addEventListener('dragover', ev => {
       ev.preventDefault()
     })
-    landingZone.addEventListener('drop', ev => {
-      let zoneId = landingZone.id
+    decisionZone.addEventListener('drop', ev => {
+      let zoneId = decisionZone.id
       ev.preventDefault()
       const dragee = ev.dataTransfer.getData('text')
       const curr = Object.entries(mapping).find(([im,z]) => z === zoneId)?.[0]
@@ -148,16 +133,37 @@ function render(theater) {
       }
 
       mapping[dragee] = zoneId
-      landingZone.appendChild(document.getElementById(dragee))
+      decisionZone.appendChild(document.getElementById(dragee))
       console.log(mapping)
     })
 
 
     container.appendChild(button)
-    // w.appendChild(button)
-    w.appendChild(landingZone)
-    document.getElementById('buttons').appendChild(w)
+    container.appendChild(decisionZone)
   })
+
+  chosenWords.forEach((at, i) => {
+    const ansewrZone = document.createElement('span')
+    ansewrZone.id = `answer-${at}`
+    ansewrZone.classList.add('zone')
+    ansewrZone.style.gridColumn = "4 / span 1"
+    ansewrZone.style.gridRow = `${i + 1} / span 1`
+    ansewrZone.style.justifySelf = 'stretch'
+    ansewrZone.style.alignSelf = 'stretch'
+    container.appendChild(ansewrZone)
+
+    const img = document.createElement('img')
+    img.id = `image-${at}`
+    img.setAttribute('src', theater[at].url)
+    img.setAttribute('width', "120")
+    img.setAttribute('height', "120")
+    img.setAttribute('draggable', 'true')
+    img.addEventListener('dragstart', ev => {
+      ev.dataTransfer.setData("text", ev.target.id);
+    })
+    ansewrZone.appendChild(img)
+  })
+
 
   document.getElementById('check').addEventListener('click', () => {
     const inUse = []

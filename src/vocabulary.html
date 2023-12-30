@@ -128,7 +128,7 @@ function render(theater) {
   const shuffled = shuffleStrings(chosenWords)
   console.log(`chosenWords=${JSON.stringify(chosenWords)}, shuffeled=${JSON.stringify(shuffled)}`)
 
-  const setDropZone = (element, zoneSpecifier) => {
+  const installDropZone = (element, zoneSpecifier) => {
     element.addEventListener('dragover', ev => {
       const occupied = model.isOccupied(zoneSpecifier)
       console.log(`is ${zoneSpecifier} occupied? ${occupied}`)
@@ -188,7 +188,7 @@ function render(theater) {
     decisionZone.style.justifySelf = 'stretch'
     decisionZone.style.alignSelf = 'stretch'
 
-    setDropZone(decisionZone, at)
+    installDropZone(decisionZone, at)
 
     container.appendChild(button)
     container.appendChild(decisionZone)

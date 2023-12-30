@@ -13,6 +13,7 @@
       background-color: bisque;
       border-radius: 12px;
       border-style: solid;
+      border-color: black;
       border-width: 5px;
       padding: 15px;
       font-size: 36;
@@ -35,6 +36,10 @@
 
     .can-drop {
       border-color: blueviolet;
+    }
+
+    .hidden {
+      display: none;
     }
 
     #container {
@@ -220,13 +225,19 @@ function render(theater) {
 
 
   document.getElementById('check').addEventListener('click', () => {
-    const inUse = []
+    let ok = true
     for (const w of model.words()) {
       const buttonId = `button-${w}`
       const b = document.getElementById(buttonId)
       const ans = model.getWordAtZone(w)
+      if (ans !== w) {
+        ok = false
+      }
+
       b.style.borderColor = ans === w ? `#33FF57`: !ans ? 'purple' : '#C70039'
     }
+
+    document.getElementById('next').classList.toggle('hidden', !ok)
   })
 
   document.getElementById('next').addEventListener('click', () => {
@@ -360,9 +371,15 @@ function createTheathers() {
 <body dir="ltr">
   <center><h1 style="font-size:97px;">
     <h1 style="font-size:115px; margin: 2px;">
-      <span class="s">?</span>
-      <span class="t">?</span>
-      <span class="u">?</span>
+      <span class="s">N</span>
+      <span class="t">e</span>
+      <span class="u">w</span>
+      <span>&nbsp;</span>
+      <span class="s">w</span>
+      <span class="t">o</span>
+      <span class="u">r</span>
+      <span class="s">d</span>
+      <span class="t">s</span>
     </h1>
   </center>
   <div id="container">
@@ -370,11 +387,7 @@ function createTheathers() {
   <div id="buttons"></div>
   <br/>
   <div id="images"></div>
-  <ul style="font-size:36px; line-height: 1.5em;">
-    <!-- <li>משחק מספר 1</li>
-    <li>משחק מספר 2</li> -->
-  </ul>
-  <span id="check" class="button">Check</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="next" class="button">⟳</span>
+  <span id="check" class="button" style="color: purple">?&nbsp;?&nbsp;?</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="next" class="button hidden">🎉</span>
 
   <div id="d"></div>
   <br/>

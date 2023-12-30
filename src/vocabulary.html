@@ -87,13 +87,14 @@ function choose(theater) {
 class Model {
   constructor(words) {
     this.mapping = {}
+    this.wordList = words
     for (const w of words) {
       this.mapping[w] = ''
     }
   }
 
   words() {
-    return Object.keys(this.mapping).filter(at => typeof at === 'string')
+    return this.wordList
   }
 
   getWordAtZone(challengeWord) {
@@ -202,6 +203,7 @@ function render(theater) {
     ansewrZone.style.gridRow = `${i + 1} / span 1`
     ansewrZone.style.justifySelf = 'stretch'
     ansewrZone.style.alignSelf = 'stretch'
+    installDropZone(ansewrZone, i)
     container.appendChild(ansewrZone)
 
     const img = document.createElement('img')

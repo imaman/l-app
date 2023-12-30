@@ -127,6 +127,35 @@ function render(theater) {
 
   const shuffled = shuffleStrings(chosenWords)
   console.log(`chosenWords=${JSON.stringify(chosenWords)}, shuffeled=${JSON.stringify(shuffled)}`)
+
+  const setDropZone = (element, zoneSpecifier) => {
+    element.addEventListener('dragover', ev => {
+      const occupied = model.isOccupied(zoneSpecifier)
+      console.log(`is ${zoneSpecifier} occupied? ${occupied}`)
+      if (!occupied) {
+        ev.preventDefault()
+      }
+    })
+
+    element.addEventListener('dragenter', () => {
+      const occupied = model.isOccupied(zoneSpecifier)
+      if (!occupied) {
+        element.classList.add('can-drop')
+      }
+    })
+    element.addEventListener('dragleave', () => {
+      element.classList.remove('can-drop')
+    })
+    element.addEventListener('drop', ev => {
+      element.classList.remove('can-drop')
+      let zoneId = element.id
+      ev.preventDefault()
+      const draggedWord = ev.dataTransfer.getData('text')
+
+      model.dropAnswer(zoneSpecifier, draggedWord)
+      element.appendChild(document.getElementById(`image-${draggedWord}`))
+    })
+  }
   shuffled.forEach((at, i) => {
     const button = document.createElement('div')
     button.id = `button-${at}`
@@ -159,34 +188,7 @@ function render(theater) {
     decisionZone.style.justifySelf = 'stretch'
     decisionZone.style.alignSelf = 'stretch'
 
-    decisionZone.addEventListener('dragover', ev => {
-      const occupied = model.isOccupied(at)
-      console.log(`is ${at} occupied? ${occupied}`)
-      if (!occupied) {
-        ev.preventDefault()
-      }
-    })
-
-    decisionZone.addEventListener('dragenter', () => {
-      const occupied = model.isOccupied(at)
-      if (!occupied) {
-        decisionZone.classList.add('can-drop')
-      }
-    })
-    decisionZone.addEventListener('dragleave', () => {
-      decisionZone.classList.remove('can-drop')
-    })
-    decisionZone.addEventListener('drop', ev => {
-      decisionZone.classList.remove('can-drop')
-      let zoneId = decisionZone.id
-      ev.preventDefault()
-      const draggedWord = ev.dataTransfer.getData('text')
-
-      model.dropAnswer(at, draggedWord)
-      decisionZone.appendChild(document.getElementById(`image-${draggedWord}`))
-      console.log(JSON.stringify(model))
-    })
-
+    setDropZone(decisionZone, at)
 
     container.appendChild(button)
     container.appendChild(decisionZone)

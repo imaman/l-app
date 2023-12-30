@@ -23,13 +23,166 @@
     .button:active {
       background-color: chocolate
     }
+
+    .container {
+      display: grid;
+      grid-template-columns: 50px 50px 50px 50px;
+      grid-template-rows: auto;
+      grid-template-areas: 
+        "header header header header"
+        "main main . sidebar"
+        "footer footer footer footer";
+    }    
   </style>
 
 <script>
 const voice = window.speechSynthesis.getVoices().find(x => x.name === 'Google US English')
 
+window.addEventListener('load', () => {
+  const utterance = new SpeechSynthesisUtterance('a')
+  utterance.voice = voice
+  utterance.volume = 1
+  // speechSynthesis.speak(utterance);
 
-const theaters = [{
+  const d = document.getElementById('d')
+  // for (const words of theaters) {
+  //   for (const w of Object.keys(words)) {
+  //     const entry = words[w]      
+  //     if (entry.url) {
+  //       continue
+  //     }
+  //     const toAdd = document.createElement('div')
+  //     toAdd.style.marginBottom = "16px";
+  //     toAdd.innerHTML = `<a target="_blank" rel="noopener noreferrer" href="https://www.google.com/search?q=image+${w}+clipart&sclient=img&source=hp&uact=5&tbm=isch">${w}</a>`
+  //     d.appendChild(toAdd)
+  //   }
+  // }
+
+  const theaters = createTheathers()
+  render(theaters[Math.trunc(Math.random() * theaters.length)])
+})
+
+function shuffleStrings(strings) {
+  const arr = strings.map(w => ({w, rand: self.crypto.randomUUID()}))
+  arr.sort((lhs, rhs) => lhs.rand.localeCompare(rhs.rand))
+  return arr.map(at => at.w)
+}
+
+function choose(theater) {
+  return shuffleStrings(Object.keys(theater)).slice(0, 4)
+}
+
+function render(theater) {
+  const mapping = {}
+  const chosenWords = choose(theater)
+  for (const at of chosenWords) {
+    const img = document.createElement('img')
+    img.id = `image-${at}`
+    img.setAttribute('src', theater[at].url)
+    img.setAttribute('width', "120")
+    img.setAttribute('height', "120")
+    img.style.padding = "5px"
+    img.style.borderColor = "purple"
+    img.style.borderStyle = "solid"
+    img.style.borderRadius = "12px"
+    img.style.marginLeft = "48px"
+    img.setAttribute('draggable', 'true')
+    img.addEventListener('dragstart', ev => {
+      ev.dataTransfer.setData("text", ev.target.id);
+    })
+    document.getElementById('images').appendChild(img)
+  }
+
+  const shuffled = shuffleStrings(chosenWords)
+  console.log(`chosenWords=${JSON.stringify(chosenWords)}, shuffeled=${JSON.stringify(shuffled)}`)
+  for (const at of shuffled) {
+    const w = document.createElement('div')
+    w.style.marginTop = '60px'
+    w.style.marginBottom = '60px'
+
+    const button = document.createElement('span')
+    button.id = `button-${at}`
+    button.style.display = 'inline-block'
+    button.style.verticalAlign = "middle"
+    button.style.lineHeight = '120px'
+    button.innerText = '🗣️'
+    button.style.borderColor = 'purple'
+    button.style.borderStyle = 'solid'
+    button.style.borderRadius = '6px'
+    button.style.fontSize = '36'
+    // button.style.maxWidth = '10%'
+    button.addEventListener('click', () => {
+      const utterance = new SpeechSynthesisUtterance('')
+      utterance.text = at
+      utterance.voice = voice
+      utterance.rate = 0.8
+      utterance.volum = 1
+      speechSynthesis.speak(utterance);
+    })
+
+    const landingZone = document.createElement('span')
+    landingZone.id = `zone-${at}`
+    landingZone.style.display = 'inline-block'
+    landingZone.style.verticalAlign = "middle"
+    landingZone.style.backgroundColor = '#FF5733'
+    landingZone.style.lineHeight = '120px'
+    landingZone.style.width = '120px'
+    landingZone.style.height = '120px'
+    landingZone.style.marginLeft = '48px'
+
+    landingZone.addEventListener('dragover', ev => {
+      ev.preventDefault()
+    })
+    landingZone.addEventListener('drop', ev => {
+      let zoneId = landingZone.id
+      ev.preventDefault()
+      const dragee = ev.dataTransfer.getData('text')
+      const curr = Object.entries(mapping).find(([im,z]) => z === zoneId)?.[0]
+      if (curr) {
+        document.getElementById('images').appendChild(document.getElementById(curr))
+      }
+
+      mapping[dragee] = zoneId
+      landingZone.appendChild(document.getElementById(dragee))
+      console.log(mapping)
+    })
+
+
+    w.appendChild(button)
+    w.appendChild(landingZone)
+    document.getElementById('buttons').appendChild(w)
+  }
+
+  document.getElementById('check').addEventListener('click', () => {
+    const inUse = []
+    for (const [im, z] of Object.entries(mapping)) {
+      const w = z.split('-')[1]
+      inUse.push(w)
+      const buttonId = `button-${w}`
+      const b = document.getElementById(buttonId)
+      const ok = im === `image-${w}`
+      b.style.borderColor = ok ? `#33FF57`: '#C70039'
+    }
+
+    for (const w of chosenWords) {
+      if (inUse.includes(w)) {
+        continue
+      }
+
+      const buttonId = `button-${w}`
+      const b = document.getElementById(buttonId)
+      b.style.borderColor = `purple`
+    }
+  })
+
+  document.getElementById('next').addEventListener('click', () => {
+    location.reload()
+  })
+}
+
+
+function createTheathers() {
+    return [{
   "one": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/one-706897_1280.jpg" },
   "two": { url: "https://cdn.pixabay.com/photo/2012/05/04/10/18/two-47085_1280.png" },
   "three": { url: "https://c8.alamy.com/comp/FE0XKN/the-number-three-as-a-polished-golden-object-FE0XKN.jpg" },
@@ -147,146 +300,6 @@ const theaters = [{
   // "as": { url: "" },
 }
 ]
-
-window.addEventListener('load', () => {
-  const utterance = new SpeechSynthesisUtterance('a')
-  utterance.voice = voice
-  utterance.volume = 1
-  // speechSynthesis.speak(utterance);
-
-  const d = document.getElementById('d')
-  // for (const words of theaters) {
-  //   for (const w of Object.keys(words)) {
-  //     const entry = words[w]      
-  //     if (entry.url) {
-  //       continue
-  //     }
-  //     const toAdd = document.createElement('div')
-  //     toAdd.style.marginBottom = "16px";
-  //     toAdd.innerHTML = `<a target="_blank" rel="noopener noreferrer" href="https://www.google.com/search?q=image+${w}+clipart&sclient=img&source=hp&uact=5&tbm=isch">${w}</a>`
-  //     d.appendChild(toAdd)
-  //   }
-  // }
-
-  render(theaters[Math.trunc(Math.random() * theaters.length)])
-})
-
-function shuffleStrings(strings) {
-  const arr = strings.map(w => ({w, rand: self.crypto.randomUUID()}))
-  arr.sort((lhs, rhs) => lhs.rand.localeCompare(rhs.rand))
-  return arr.map(at => at.w)
-}
-
-function choose(theater) {
-  return shuffleStrings(Object.keys(theater)).slice(0, 4)
-}
-
-function render(theater) {
-  const mapping = {}
-  const chosenWords = choose(theater)
-  for (const at of chosenWords) {
-    const img = document.createElement('img')
-    img.id = `image-${at}`
-    img.setAttribute('src', theater[at].url)
-    img.setAttribute('width', "120")
-    img.setAttribute('height', "120")
-    img.style.padding = "5px"
-    img.style.borderColor = "purple"
-    img.style.borderStyle = "solid"
-    img.style.borderRadius = "12px"
-    img.style.marginLeft = "48px"
-    img.setAttribute('draggable', 'true')
-    img.addEventListener('dragstart', ev => {
-      ev.dataTransfer.setData("text", ev.target.id);
-    })
-    document.getElementById('images').appendChild(img)
-  }
-
-  const shuffled = shuffleStrings(chosenWords)
-  console.log(`chosenWords=${JSON.stringify(chosenWords)}, shuffeled=${JSON.stringify(shuffled)}`)
-  for (const at of shuffled) {  
-    const w = document.createElement('div')
-    w.style.marginTop = '60px'
-    w.style.marginBottom = '60px'
-
-    const button = document.createElement('span')
-    button.id = `button-${at}`
-    button.style.display = 'inline-block'
-    button.style.verticalAlign = "middle"
-    button.style.lineHeight = '120px'
-    button.innerText = '🗣️'
-    button.style.borderColor = 'purple'
-    button.style.borderStyle = 'solid'
-    button.style.borderRadius = '6px'
-    button.style.fontSize = '36'
-    // button.style.maxWidth = '10%'
-    button.addEventListener('click', () => {
-      const utterance = new SpeechSynthesisUtterance('')
-      utterance.text = at
-      utterance.voice = voice
-      utterance.rate = 0.8
-      utterance.volum = 1
-      speechSynthesis.speak(utterance);
-    })
-
-    const landingZone = document.createElement('span')
-    landingZone.id = `zone-${at}`
-    landingZone.style.display = 'inline-block'
-    landingZone.style.verticalAlign = "middle"
-    landingZone.style.backgroundColor = '#FF5733'
-    landingZone.style.lineHeight = '120px'
-    landingZone.style.width = '120px'
-    landingZone.style.height = '120px'
-    landingZone.style.marginLeft = '48px'
-
-    landingZone.addEventListener('dragover', ev => {
-      ev.preventDefault()
-    })
-    landingZone.addEventListener('drop', ev => {
-      let zoneId = landingZone.id
-      ev.preventDefault()
-      const dragee = ev.dataTransfer.getData('text')
-      const curr = Object.entries(mapping).find(([im,z]) => z === zoneId)?.[0]
-      if (curr) {
-        document.getElementById('images').appendChild(document.getElementById(curr))
-      }
-
-      mapping[dragee] = zoneId
-      landingZone.appendChild(document.getElementById(dragee))
-      console.log(mapping)
-    })
-
-
-    w.appendChild(button)
-    w.appendChild(landingZone)
-    document.getElementById('buttons').appendChild(w)
-  }
-
-  document.getElementById('check').addEventListener('click', () => {
-    const inUse = []
-    for (const [im, z] of Object.entries(mapping)) {
-      const w = z.split('-')[1]
-      inUse.push(w)
-      const buttonId = `button-${w}`
-      const b = document.getElementById(buttonId)
-      const ok = im === `image-${w}`
-      b.style.borderColor = ok ? `#33FF57`: '#C70039'
-    }
-
-    for (const w of chosenWords) {
-      if (inUse.includes(w)) {
-        continue
-      }
-
-      const buttonId = `button-${w}`
-      const b = document.getElementById(buttonId)
-      b.style.borderColor = `purple`
-    }
-  })
-
-  document.getElementById('next').addEventListener('click', () => {
-    location.reload()
-  })
 }
 
 </script>

@@ -28,6 +28,7 @@
 <script>
 const voice = window.speechSynthesis.getVoices().find(x => x.name === 'Google US English')
 
+
 const theaters = [{
   "one": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/one-706897_1280.jpg" },
   "two": { url: "https://cdn.pixabay.com/photo/2012/05/04/10/18/two-47085_1280.png" },
@@ -148,6 +149,12 @@ const theaters = [{
 ]
 
 window.addEventListener('load', () => {
+  const utterance = new SpeechSynthesisUtterance('a')
+  utterance.voice = voice
+  utterance.volume = 0
+  utterance.voice = voice
+
+  speechSynthesis.speak(utterance);
   const d = document.getElementById('d')
   // for (const words of theaters) {
   //   for (const w of Object.keys(words)) {
@@ -215,9 +222,11 @@ function render(theater) {
     button.style.fontSize = '36'
     // button.style.maxWidth = '10%'
     button.addEventListener('click', () => {
-      const utterance = new SpeechSynthesisUtterance(at)
+      const utterance = new SpeechSynthesisUtterance('')
+      utterance.text = at
       utterance.voice = voice
       utterance.rate = 0.8
+      utterance.volum = 1
       speechSynthesis.speak(utterance);
     })
 

@@ -33,6 +33,10 @@
       border-radius: 6px;
     }
 
+    .can-drop {
+      border-color: blueviolet;
+    }
+
     #container {
       /* background-color: cadetblue; */
       display: grid;
@@ -80,8 +84,26 @@ function choose(theater) {
   return shuffleStrings(Object.keys(theater)).slice(0, 4)
 }
 
+class Model {
+  constructor() {
+    this.mapping = {}
+  }
+
+  hasDecisionFor(challengeWord) {
+    return Boolean(this.mapping[challengeWord])
+  }
+
+  setDecision(challengeWord, answerWord) {
+    this.mapping[challengeWord] = answerWord
+  }
+
+  toJSON() {
+    return this.mapping
+  }
+}
+
 function render(theater) {
-  const mapping = {}
+  const model = new Model()
   const chosenWords = choose(theater)
 
   const container = document.getElementById('container')
@@ -121,20 +143,31 @@ function render(theater) {
     decisionZone.style.alignSelf = 'stretch'
 
     decisionZone.addEventListener('dragover', ev => {
-      ev.preventDefault()
+      const occupied = model.hasDecisionFor(at)
+      console.log(`is ${at} occupied? ${occupied}`)
+      if (!occupied) {
+        ev.preventDefault()
+      }
+    })
+
+    decisionZone.addEventListener('dragenter', () => {
+      const occupied = model.hasDecisionFor(at)
+      if (!occupied) {
+        decisionZone.classList.add('can-drop')
+      }
+    })
+    decisionZone.addEventListener('dragleave', () => {
+      decisionZone.classList.remove('can-drop')
     })
     decisionZone.addEventListener('drop', ev => {
+      decisionZone.classList.remove('can-drop')
       let zoneId = decisionZone.id
       ev.preventDefault()
-      const dragee = ev.dataTransfer.getData('text')
-      const curr = Object.entries(mapping).find(([im,z]) => z === zoneId)?.[0]
-      if (curr) {
-        document.getElementById('images').appendChild(document.getElementById(curr))
-      }
+      const draggedWord = ev.dataTransfer.getData('text')
 
-      mapping[dragee] = zoneId
-      decisionZone.appendChild(document.getElementById(dragee))
-      console.log(mapping)
+      model.setDecision(at, draggedWord)
+      decisionZone.appendChild(document.getElementById(`image-${draggedWord}`))
+      console.log(JSON.stringify(model))
     })
 
 
@@ -159,7 +192,7 @@ function render(theater) {
     img.setAttribute('height', "120")
     img.setAttribute('draggable', 'true')
     img.addEventListener('dragstart', ev => {
-      ev.dataTransfer.setData("text", ev.target.id);
+      ev.dataTransfer.setData("text", at);
     })
     ansewrZone.appendChild(img)
   })

@@ -85,16 +85,33 @@ function choose(theater) {
 }
 
 class Model {
-  constructor() {
+  constructor(words) {
     this.mapping = {}
+    for (const w of words) {
+      this.mapping[w] = ''
+    }
   }
 
-  hasDecisionFor(challengeWord) {
-    return Boolean(this.mapping[challengeWord])
+  words() {
+    return Object.keys(this.mapping).filter(at => typeof at === 'string')
   }
 
-  setDecision(challengeWord, answerWord) {
-    this.mapping[challengeWord] = answerWord
+  getWordAtZone(challengeWord) {
+    return this.mapping[challengeWord]
+  }
+
+  isOccupied(zoneSelector) {
+    return Boolean(this.mapping[zoneSelector])
+  }
+
+  dropAnswer(zoneSelector, answerWord) {
+    for (const [k, v] of Object.entries(this.mapping)) {
+      if (v === answerWord) {
+        this.mapping[k] = ''
+      }
+    }
+
+    this.mapping[zoneSelector] = answerWord
   }
 
   toJSON() {
@@ -103,8 +120,8 @@ class Model {
 }
 
 function render(theater) {
-  const model = new Model()
   const chosenWords = choose(theater)
+  const model = new Model(chosenWords)
 
   const container = document.getElementById('container')
 
@@ -143,7 +160,7 @@ function render(theater) {
     decisionZone.style.alignSelf = 'stretch'
 
     decisionZone.addEventListener('dragover', ev => {
-      const occupied = model.hasDecisionFor(at)
+      const occupied = model.isOccupied(at)
       console.log(`is ${at} occupied? ${occupied}`)
       if (!occupied) {
         ev.preventDefault()
@@ -151,7 +168,7 @@ function render(theater) {
     })
 
     decisionZone.addEventListener('dragenter', () => {
-      const occupied = model.hasDecisionFor(at)
+      const occupied = model.isOccupied(at)
       if (!occupied) {
         decisionZone.classList.add('can-drop')
       }
@@ -165,7 +182,7 @@ function render(theater) {
       ev.preventDefault()
       const draggedWord = ev.dataTransfer.getData('text')
 
-      model.setDecision(at, draggedWord)
+      model.dropAnswer(at, draggedWord)
       decisionZone.appendChild(document.getElementById(`image-${draggedWord}`))
       console.log(JSON.stringify(model))
     })
@@ -200,23 +217,11 @@ function render(theater) {
 
   document.getElementById('check').addEventListener('click', () => {
     const inUse = []
-    for (const [im, z] of Object.entries(mapping)) {
-      const w = z.split('-')[1]
-      inUse.push(w)
+    for (const w of model.words()) {
       const buttonId = `button-${w}`
       const b = document.getElementById(buttonId)
-      const ok = im === `image-${w}`
-      b.style.borderColor = ok ? `#33FF57`: '#C70039'
-    }
-
-    for (const w of chosenWords) {
-      if (inUse.includes(w)) {
-        continue
-      }
-
-      const buttonId = `button-${w}`
-      const b = document.getElementById(buttonId)
-      b.style.borderColor = `purple`
+      const ans = model.getWordAtZone(w)
+      b.style.borderColor = ans === w ? `#33FF57`: !ans ? 'purple' : '#C70039'
     }
   })
 

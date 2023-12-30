@@ -151,10 +151,9 @@ const theaters = [{
 window.addEventListener('load', () => {
   const utterance = new SpeechSynthesisUtterance('a')
   utterance.voice = voice
-  utterance.volume = 0
-  utterance.voice = voice
+  utterance.volume = 1
+  // speechSynthesis.speak(utterance);
 
-  speechSynthesis.speak(utterance);
   const d = document.getElementById('d')
   // for (const words of theaters) {
   //   for (const w of Object.keys(words)) {

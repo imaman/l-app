@@ -45,10 +45,21 @@
     #container {
       /* background-color: cadetblue; */
       display: grid;
-      grid-template-columns: 2fr 2fr 1fr 2fr 2fr;
-      grid-template-rows: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-rows: auto;
       row-gap: 15px;
       column-gap: 10px;
+    }
+
+    #container2 {
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-rows: auto;
+      row-gap: 15px;
+      column-gap: 10px;
+      grid-auto-flow: row;
     }
   </style>
 
@@ -86,20 +97,21 @@ function shuffleStrings(strings) {
 }
 
 function choose(theater) {
-  return shuffleStrings(Object.keys(theater)).slice(0, 4)
+  return shuffleStrings(Object.keys(theater)).slice(0, 20)
 }
 
 class Model {
-  constructor(words) {
+  constructor(words, challengeWords) {
     this.mapping = {}
     this.wordList = words
+    this.challengeWords = challengeWords
     for (const w of words) {
       this.mapping[w] = ''
     }
   }
 
-  words() {
-    return this.wordList
+  getChallengeWords() {
+    return this.challengeWords
   }
 
   getWordAtZone(challengeWord) {
@@ -126,13 +138,15 @@ class Model {
 }
 
 function render(theater) {
-  const chosenWords = choose(theater)
-  const model = new Model(chosenWords)
+  const participatingWords = choose(theater)
+
+  const challengeWords = [participatingWords[0]]
+
+  const chosenWords = shuffleStrings(participatingWords)
+  const model = new Model(chosenWords, challengeWords)
 
   const container = document.getElementById('container')
-
-  const shuffled = shuffleStrings(chosenWords)
-  console.log(`chosenWords=${JSON.stringify(chosenWords)}, shuffeled=${JSON.stringify(shuffled)}`)
+  const container2 = document.getElementById('container2')
 
   const installDropZone = (element, zoneSpecifier) => {
     element.addEventListener('dragover', ev => {
@@ -162,7 +176,7 @@ function render(theater) {
       element.appendChild(document.getElementById(`image-${draggedWord}`))
     })
   }
-  shuffled.forEach((at, i) => {
+  challengeWords.forEach((at, i) => {
     const button = document.createElement('div')
     button.id = `button-${at}`
     button.classList.add('button')
@@ -172,7 +186,7 @@ function render(theater) {
     button.style.borderRadius = '6px'
     button.style.fontSize = '36'
 
-    button.style.gridColumn = "1 / span 1"
+    button.style.gridColumn = "1 / span 3"
     button.style.gridRow = `${i + 1} / span 1`
     button.style.justifySelf = 'right'
     button.style.alignSelf = 'center'
@@ -189,10 +203,11 @@ function render(theater) {
     const decisionZone = document.createElement('span')
     decisionZone.id = `zone-${at}`
     decisionZone.classList.add('zone')
-    decisionZone.style.gridColumn = "2 / span 1"
+    decisionZone.style.gridColumn = "4 / span 3"
     decisionZone.style.gridRow = `${i + 1} / span 1`
     decisionZone.style.justifySelf = 'stretch'
     decisionZone.style.alignSelf = 'stretch'
+    decisionZone.style.minHeight = 128
 
     installDropZone(decisionZone, at)
 
@@ -204,12 +219,12 @@ function render(theater) {
     const ansewrZone = document.createElement('span')
     ansewrZone.id = `answer-${at}`
     ansewrZone.classList.add('zone')
-    ansewrZone.style.gridColumn = "4 / span 1"
-    ansewrZone.style.gridRow = `${i + 1} / span 1`
+    // ansewrZone.style.gridColumn = "4 / span 1"
+    // ansewrZone.style.gridRow = `6 / span 1`
     ansewrZone.style.justifySelf = 'stretch'
     ansewrZone.style.alignSelf = 'stretch'
     installDropZone(ansewrZone, i)
-    container.appendChild(ansewrZone)
+    container2.appendChild(ansewrZone)
 
     const img = document.createElement('img')
     img.id = `image-${at}`
@@ -226,7 +241,7 @@ function render(theater) {
 
   document.getElementById('check').addEventListener('click', () => {
     let ok = true
-    for (const w of model.words()) {
+    for (const w of model.getChallengeWords()) {
       const buttonId = `button-${w}`
       const b = document.getElementById(buttonId)
       const ans = model.getWordAtZone(w)
@@ -257,8 +272,7 @@ function createTheathers() {
   "seven": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/seven-706891_960_720.jpg" },
   "eight": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/eight-706890_1280.jpg" },
   "nine": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/nine-706889_960_720.jpg" },
-  "ten": { url: "https://static.vecteezy.com/system/resources/previews/008/489/743/original/number-ten-10-red-number-png.png" }},
-  {
+  "ten": { url: "https://static.vecteezy.com/system/resources/previews/008/489/743/original/number-ten-10-red-number-png.png" },
   "bed": { url: "https://media.istockphoto.com/id/1149521461/vector/wooden-bed-with-pillow.jpg?s=612x612&w=0&k=20&c=9fu6sv92j5_7YY9UEyVChCDOojnbJnTjv-wXyKeGt5Q=" },
   "balloon": { url: "https://media.istockphoto.com/id/1281511645/vector/bunch-of-inflatable-balloons-in-cartoon-style-isolated-on-white-background-vector.jpg?s=612x612&w=0&k=20&c=VngxtS7KHH_VhF2HCaPc3BiBAs9izXXtX-5SI6UpRpo=" },
   "doctor": { url: "https://static.vecteezy.com/system/resources/previews/002/896/807/non_2x/female-doctor-using-her-digital-tablet-free-vector.jpg" },
@@ -268,9 +282,7 @@ function createTheathers() {
   "listen": { url: "https://images.twinkl.co.uk/tw1n/image/private/t_630/u/ux/active-listening-wiki_ver_1.png" },
   "monkey": { url: "https://pics.craiyon.com/2023-06-16/f99a664cc9354f73bc019707f658316c.webp" },
   "mother": { url: "https://cdn2.vectorstock.com/i/1000x1000/70/61/dark-skinned-mother-and-baby-vector-23827061.jpg" },
-  "quiet": { url: "https://www.teachingchannel.com/wp-content/uploads/2023/05/ways-to-quiet-classroom.jpg" }
-  },
-  {
+  "quiet": { url: "https://www.teachingchannel.com/wp-content/uploads/2023/05/ways-to-quiet-classroom.jpg" },
   "black": { url: "https://m.media-amazon.com/images/I/61hX1zqzJhL._AC_UF350,350_QL80_.jpg" },
   "blue": { url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAA1BMVEUAAP+KeNJXAAAASElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AcUIAAFkqh/QAAAAAElFTkSuQmCC" },
   "brown": { url: "https://img.freepik.com/free-photo/brown-concrete-wall-with-scratches-vector_53876-143109.jpg?size=626&ext=jpg" },
@@ -280,8 +292,6 @@ function createTheathers() {
   "red": { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Solid_red.svg/512px-Solid_red.svg.png?20150316143248" },
   "white": { url: "https://thistlewoodfarms.com/wp-content/uploads/2013/05/SW-Alabaster.jpg" },
   "yellow": { url: "https://images.unsplash.com/photo-1615457938971-3ab61c1c0d57?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8eWVsbG93fGVufDB8fDB8fHww" },
-  },
-  {
   "sit down": { url: "https://i.pinimg.com/736x/ce/8e/c8/ce8ec86c342e65276ef8f5c2518d0498.jpg" },
   "stand up": { url: "https://clipart-library.com/image_gallery/4091.png" },
   "baby": { url: "https://static.vecteezy.com/system/resources/previews/013/740/512/original/smiling-baby-swaddle-clipart-simple-cute-smile-baby-swaddle-in-blue-wrap-flat-illustration-happy-infant-baby-swaddling-cartoon-style-kids-baby-shower-newborn-and-nursery-decoration-concept-vector.jpg" },
@@ -296,8 +306,7 @@ function createTheathers() {
   "happy": { url: "https://st.depositphotos.com/4058993/60405/i/450/depositphotos_604056392-stock-photo-happy-faces-ball-yellow-background.jpg" },
   "help": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj5EXDIlaT9CYUGvZYBYs2Qp2kqbQT-BMvnA&usqp=CAU" },
   "house": { url: "https://i.pinimg.com/originals/86/fb/1d/86fb1d0eb8c5117975e67cd0a673c41b.png" },
-  "play": { url: "https://t3.ftcdn.net/jpg/00/26/75/98/360_F_26759815_b7gud3HxMEKd8IIQxRbX0RWlEUvoepH5.jpg" }
-},{
+  "play": { url: "https://t3.ftcdn.net/jpg/00/26/75/98/360_F_26759815_b7gud3HxMEKd8IIQxRbX0RWlEUvoepH5.jpg" },
   "left": { url: "https://clipart-library.com/images/LTd5arLKc.png" },
   "right": { url: "https://media.istockphoto.com/id/1179860629/vector/traffic-sign-turn-right-warning-attention-vector-on-yellow-background.jpg?s=612x612&w=0&k=20&c=wJZPwRe9BEg5_l3LWTI_4mBmYk6MHDxXpGoiFEMEDaE=" },
   "roof": { url: "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/79603/rooftop-clipart-xl.png" },
@@ -318,8 +327,6 @@ function createTheathers() {
   "banana": { url: "https://i.etsystatic.com/32486242/r/il/d4e9f8/4740506004/il_794xN.4740506004_iu58.jpg" },
   "bat": { url: "https://png.pngtree.com/png-clipart/20191120/original/pngtree-lovely-bat-clipart-vector-png-element-png-image_5066344.jpg" },
   "big": { url: "https://pics.clipartpng.com/midle/Elephant_Large_PNG_Clipart-1047.png" },
-},
-{
   // "best": { url: "" },
   "book": { url: "https://static.vecteezy.com/system/resources/previews/004/319/237/non_2x/opened-book-with-empty-pages-free-vector.jpg" },
   "bus": { url: "https://media.istockphoto.com/id/1335029323/vector/yellow-school-bus-front-view-cartoon-style-vector-illustration-flat-isolated-on-white.jpg?s=612x612&w=0&k=20&c=A4BRd_IeKDa9MvKQ1OROhg94aZBsaVBJkjRdEUahIXU=" },
@@ -338,8 +345,6 @@ function createTheathers() {
   "library": { url: "https://www.shutterstock.com/image-vector/interior-design-school-library-illustration-260nw-2114033597.jpg" },
   "mad": { url: "https://www.pngitem.com/pimgs/m/518-5188828_mad-face-clipart-hd-png-download.png" },
   "teacher": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg9I3uRHr-NyjOm9gvk6tMSJ1CSq93hmnHVQ&usqp=CAU" },
-},
-{
   "paper": { url: "https://clipart-library.com/data_images/64750.jpg" },
   "pen": { url: "https://png.pngtree.com/element_our/20190603/ourmid/pngtree-blue-writing-pen-illustration-image_1427760.jpg" },
   "pencil": { url: "https://clipart-library.com/new_gallery/pencil-clipart-7.png" },
@@ -383,6 +388,8 @@ function createTheathers() {
     </h1>
   </center>
   <div id="container">
+  </div>
+  <div id="container2">
   </div>
   <div id="buttons"></div>
   <br/>

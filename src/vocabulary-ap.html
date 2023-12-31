@@ -10,6 +10,8 @@
       color: rgb(192, 91, 23)
     }
     .button {
+      display: flex;
+      justify-content: center;
       background-color: bisque;
       border-radius: 12px;
       border-style: solid;
@@ -32,6 +34,7 @@
       background-color: peru;
       border-style: solid;
       border-radius: 6px;
+      border-width: 6px;
     }
 
     .can-drop {
@@ -42,23 +45,50 @@
       display: none;
     }
 
-    #container {
-      /* background-color: cadetblue; */
+    #page {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      row-gap: 2rem;
+      grid-template-areas: 
+        ". challenges ."
+        ". buttons ."
+        ". answers .";
+    }
+    #container {
+      grid-area: challenges;
+      display: grid;
+      grid-template-columns: 1fr 2fr 2fr 7fr;
       grid-template-rows: auto;
-      row-gap: 15px;
-      column-gap: 10px;
+      row-gap:  1rem;
+      column-gap: 1em;
+    }
+
+    #button-bar {
+      grid-area: buttons;
+      column-gap: 1em;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 8fr;
+      grid-template-areas: ". check next .";
+      align-items: center;
+      justify-items: stretch;
+    }
+
+    #check {
+      grid-area: check;
+    }
+
+    #next {
+      grid-area: next;
     }
 
     #container2 {
+      grid-area: answers;
       margin-top: 3rem;
       margin-bottom: 3rem;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
       grid-template-rows: auto;
-      row-gap: 15px;
-      column-gap: 10px;
+      row-gap: 1rem;
+      column-gap: 1em;
       grid-auto-flow: row;
     }
   </style>
@@ -186,7 +216,7 @@ function render(theater) {
     button.style.borderRadius = '6px'
     button.style.fontSize = '36'
 
-    button.style.gridColumn = "1 / span 3"
+    button.style.gridColumn = "2 / span 1"
     button.style.gridRow = `${i + 1} / span 1`
     button.style.justifySelf = 'right'
     button.style.alignSelf = 'center'
@@ -203,7 +233,7 @@ function render(theater) {
     const decisionZone = document.createElement('span')
     decisionZone.id = `zone-${at}`
     decisionZone.classList.add('zone')
-    decisionZone.style.gridColumn = "4 / span 3"
+    decisionZone.style.gridColumn = "3 / span 1"
     decisionZone.style.gridRow = `${i + 1} / span 1`
     decisionZone.style.justifySelf = 'stretch'
     decisionZone.style.alignSelf = 'stretch'
@@ -387,15 +417,17 @@ function createTheathers() {
       <span class="t">s</span>
     </h1>
   </center>
-  <div id="container">
+  <div id="page">
+    <div id="container">
+    </div>
+    <div id="button-bar">
+      <span id="check" class="button" style="color: purple">Check</span>
+      <span id="next" class="button">⟳</span>
+    </div>
+    <div id="container2">
+    </div>  
   </div>
-  <div id="container2">
-  </div>
-  <div id="buttons"></div>
   <br/>
-  <div id="images"></div>
-  <span id="check" class="button" style="color: purple">Check</span>
-  <span id="next" class="button">⟳</span>
 
   <div id="d"></div>
   <br/>

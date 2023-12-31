@@ -82,8 +82,6 @@
 
     #container2 {
       grid-area: answers;
-      margin-top: 3rem;
-      margin-bottom: 3rem;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
       grid-template-rows: auto;
@@ -170,7 +168,7 @@ class Model {
 function render(theater) {
   const participatingWords = choose(theater)
 
-  const challengeWords = [participatingWords[0]]
+  const challengeWords = participatingWords.slice(0, 2)
 
   const chosenWords = shuffleStrings(participatingWords)
   const model = new Model(chosenWords, challengeWords)
@@ -427,12 +425,7 @@ function createTheathers() {
     <div id="container2">
     </div>  
   </div>
-  <br/>
-
   <div id="d"></div>
-  <br/>
-  <br/>
-  <br/>
 </body>
 
 </html>

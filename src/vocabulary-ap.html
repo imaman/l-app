@@ -252,7 +252,7 @@ function render(theater) {
       b.style.borderColor = ans === w ? `#33FF57`: !ans ? 'purple' : '#C70039'
     }
 
-    document.getElementById('next').classList.toggle('hidden', !ok)
+    // document.getElementById('next').classList.toggle('hidden', !ok)
   })
 
   document.getElementById('next').addEventListener('click', () => {
@@ -394,7 +394,8 @@ function createTheathers() {
   <div id="buttons"></div>
   <br/>
   <div id="images"></div>
-  <span id="check" class="button" style="color: purple">?&nbsp;?&nbsp;?</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="next" class="button hidden">🎉</span>
+  <span id="check" class="button" style="color: purple">Check</span>
+  <span id="next" class="button">⟳</span>
 
   <div id="d"></div>
   <br/>

@@ -131,11 +131,16 @@ function choose(theater) {
 class Model {
   constructor(words, challengeWords) {
     this.mapping = {}
+    this.listeners = []
     this.wordList = words
     this.challengeWords = challengeWords
     for (const w of words) {
       this.mapping[w] = ''
     }
+  }
+
+  addListener(l) {
+    this.listeners.push(l)
   }
 
   getChallengeWords() {
@@ -146,19 +151,68 @@ class Model {
     return this.mapping[challengeWord]
   }
 
-  isOccupied(zoneSelector) {
-    return Boolean(this.mapping[zoneSelector])
+  isOccupied(zoneSpecifier) {
+    return Boolean(this.mapping[zoneSpecifier])
   }
 
-  dropAnswer(zoneSelector, answerWord) {
+  dropAnswer(zoneSpecifier, answerWord) {
     for (const [k, v] of Object.entries(this.mapping)) {
       if (v === answerWord) {
         this.mapping[k] = ''
       }
     }
 
-    this.mapping[zoneSelector] = answerWord
+    this.mapping[zoneSpecifier] = answerWord
+    this._fireListeners(undefined)
   }
+
+
+
+  moveTo(answerWord, x, y) {
+    const found = this._findZone(x, y)
+    if (!found) {
+      this._fireListeners(undefined)
+      return
+    }
+
+    this._fireListeners(found.zoneSpecifier)
+  }
+
+  moveEnded(answerWord, x, y) {
+    const found = this._findZone(x, y)
+    if (!found) {
+      return undefined
+    }
+
+
+    this.dropAnswer(found.zoneSpecifier, answerWord)
+    return found.element
+  }
+
+  _findZone(x, y) {
+    const element = document.elementsFromPoint(x, y).find(e => e.classList.contains('zone'))
+    if (!element) {
+      return undefined
+    }
+
+    const id = element.id
+
+    let zoneSpecifier
+    if (id.startsWith('answer-')) {
+      zoneSpecifier = Number(id.split('-')[1])
+    } else if (id.startsWith('zone-')) {
+      zoneSpecifier = id.split('-')[1]
+    }
+
+    return {element, zoneSpecifier}
+  }
+
+  _fireListeners(zoneSpecifierOrUndefined) {
+    for (const l of this.listeners) {
+      l(zoneSpecifierOrUndefined)
+    }
+  }
+
 
   toJSON() {
     return this.mapping
@@ -203,6 +257,16 @@ function render(theater) {
       model.dropAnswer(zoneSpecifier, draggedWord)
       element.appendChild(document.getElementById(`image-${draggedWord}`))
     })
+
+    model.addListener(hoveringAboveZone => {
+      const occupied = model.isOccupied(zoneSpecifier)
+      if (occupied || (zoneSpecifier !== hoveringAboveZone)) {
+        element.classList.remove('can-drop')
+        return
+      }
+
+      element.classList.add('can-drop')
+    })
   }
   challengeWords.forEach((at, i) => {
     const button = document.createElement('div')
@@ -245,7 +309,7 @@ function render(theater) {
 
   chosenWords.forEach((at, i) => {
     const ansewrZone = document.createElement('span')
-    ansewrZone.id = `answer-${at}`
+    ansewrZone.id = `answer-${i}`
     ansewrZone.classList.add('zone')
     // ansewrZone.style.gridColumn = "4 / span 1"
     // ansewrZone.style.gridRow = `6 / span 1`
@@ -263,6 +327,32 @@ function render(theater) {
     img.addEventListener('dragstart', ev => {
       ev.dataTransfer.setData("text", at);
     })
+
+
+    img.addEventListener('touchmove', (e) => {
+      const touchLocation = e.targetTouches[0]
+
+      img.style.position = 'absolute'
+      const x = touchLocation.pageX
+      const y = touchLocation.pageY
+
+      img.style.left = `${x}px`
+      img.style.top = `${y}px`
+
+      model.moveTo(at, x, y)
+    })
+    
+    img.addEventListener('touchend', (e) => {
+      const x = parseInt(img.style.left)
+      const y = parseInt(img.style.top)
+
+      const found = model.moveEnded(at, x, y)
+      if (found) {
+        found.appendChild(img)
+      }
+      img.style.position = ''
+    })    
+
     ansewrZone.appendChild(img)
   })
 

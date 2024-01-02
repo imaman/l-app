@@ -151,8 +151,9 @@ class Model {
     return this.mapping[dzid]
   }
 
-  isOccupied(dzid) {
-    return Boolean(this.mapping[dzid])
+  canLandAt(dzid) {
+    const isOccupied = Boolean(this.mapping[dzid])
+    return !isOccupied
   }
 
   dropAnswer(dzid, answerWord) {
@@ -175,9 +176,9 @@ class Model {
       return
     }
 
-    const oc = this.isOccupied(found.dzid)
+    const canLand = this.canLandAt(found.dzid)
     console.log(`moveTo(${answerWord}) found.dzid=${found.dzid} oc=${oc}, mapping=${JSON.stringify(this.mapping)}`)
-    if (!oc) {
+    if (canLand) {
       this._fireListeners(found.dzid)
     }
   }
@@ -188,11 +189,10 @@ class Model {
       return undefined
     }
 
-    if (this.isOccupied(found.dzid)) {
+    if (!this.canLandAt(found.dzid)) {
       return undefined
     }
-
-
+    
     this.dropAnswer(found.dzid, answerWord)
     return found.element
   }
@@ -234,16 +234,13 @@ function render(theater) {
     const dzid = element.id
     model.addDropZone(dzid, answerWordOrUndefined)
     element.addEventListener('dragover', ev => {
-      const occupied = model.isOccupied(dzid)
-      console.log(`is ${dzid} occupied? ${occupied}`)
-      if (!occupied) {
+      if (model.canLandAt(dzid)) {
         ev.preventDefault()
       }
     })
 
     element.addEventListener('dragenter', () => {
-      const occupied = model.isOccupied(dzid)
-      if (!occupied) {
+      if (model.canLandAt(dzid)) {
         element.classList.add('can-drop')
       }
     })
@@ -260,13 +257,11 @@ function render(theater) {
     })
 
     model.addListener(hoveringAboveZone => {
-      const occupied = model.isOccupied(dzid)
-      if (occupied || (dzid !== hoveringAboveZone)) {
+      if (model.canLandAt(hoveringAboveZone) && (hoveringAboveZone === dzid)) {
+        element.classList.add('can-drop')
+      } else {
         element.classList.remove('can-drop')
-        return
       }
-
-      element.classList.add('can-drop')
     })
   }
   challengeWords.forEach((at, i) => {

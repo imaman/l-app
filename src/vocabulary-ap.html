@@ -83,11 +83,13 @@
     #container2 {
       grid-area: answers;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
       grid-template-rows: auto;
       row-gap: 1rem;
       column-gap: 1em;
       grid-auto-flow: row;
+      margin-left: 3em;
+      margin-right: 3em;
     }
   </style>
 
@@ -125,7 +127,7 @@ function shuffleStrings(strings) {
 }
 
 function choose(theater) {
-  return shuffleStrings(Object.keys(theater)).slice(0, 20)
+  return shuffleStrings(Object.keys(theater)).slice(0, 10)
 }
 
 class Model {
@@ -177,7 +179,6 @@ class Model {
     }
 
     const canLand = this.canLandAt(found.dzid)
-    console.log(`moveTo(${answerWord}) found.dzid=${found.dzid} oc=${oc}, mapping=${JSON.stringify(this.mapping)}`)
     if (canLand) {
       this._fireListeners(found.dzid)
     }
@@ -230,9 +231,9 @@ function render(theater) {
   const container = document.getElementById('container')
   const container2 = document.getElementById('container2')
 
-  const installDropZone = (element, answerWordOrUndefined) => {
+  const installDropZone = (element, initiallyLandedWordOrUndefined) => {
     const dzid = element.id
-    model.addDropZone(dzid, answerWordOrUndefined)
+    model.addDropZone(dzid, initiallyLandedWordOrUndefined)
     element.addEventListener('dragover', ev => {
       if (model.canLandAt(dzid)) {
         ev.preventDefault()
@@ -412,8 +413,6 @@ function createTheathers() {
   "brother": { url: "https://media.istockphoto.com/id/937920484/photo/older-brother-on-the-sofa-hugging-younger-brother.jpg?s=612x612&w=0&k=20&c=FKJR3oEQ3vdPAZ230E91eO4y3XWMkir-tl43fgXvD-o=" },
   "door": { url: "https://media.istockphoto.com/id/166270889/photo/front-door.jpg?s=612x612&w=0&k=20&c=bVW4xlNtzYLuf8w2PlkeU2EKM8ZHNC8cQfyrkEw_JZA=" },
   "family": { url: "https://i.pinimg.com/originals/fc/63/8f/fc638fbfb050efbb94a4a8f8c838bca5.png" },
-  "father": { url: "https://thumbs.dreamstime.com/z/happy-cute-kid-boy-first-day-school-father-happy-cute-kid-boy-first-day-school-father-168504493.jpg" },
-  "friend": { url: "https://clipart-library.com/img1/1106394.jpg" },
   "girl": { url: "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/34100/child-girl-clipart-xl.png" },
   "happy": { url: "https://st.depositphotos.com/4058993/60405/i/450/depositphotos_604056392-stock-photo-happy-faces-ball-yellow-background.jpg" },
   "help": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj5EXDIlaT9CYUGvZYBYs2Qp2kqbQT-BMvnA&usqp=CAU" },
@@ -461,7 +460,6 @@ function createTheathers() {
   "pen": { url: "https://png.pngtree.com/element_our/20190603/ourmid/pngtree-blue-writing-pen-illustration-image_1427760.jpg" },
   "pencil": { url: "https://clipart-library.com/new_gallery/pencil-clipart-7.png" },
   "poster": { url: "https://clipart-library.com/image_gallery/256434.gif" },
-  "pupil": { url: "https://clipart-library.com/img/1421105.png" },
   "read": { url: "https://thumb.ac-illust.com/34/34ccedb31fb1afbf3a69ae6d2afb144c_w.jpeg" },
   "ruler": { url: "https://www.shutterstock.com/image-vector/vector-cartoon-yellow-ruler-on-600nw-651630670.jpg" },
   "school": { url: "https://img.freepik.com/free-vector/large-school-building-scene_1308-32058.jpg" },
@@ -469,11 +467,14 @@ function createTheathers() {
   "small": { url: "https://thumbs.dreamstime.com/b/hand-showing-tiny-small-size-sketch-vector-hand-gesture-showing-tiny-small-size-sketch-engraving-vector-illustration-t-shirt-163663231.jpg" },
   "snake": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrcWjkB_RoW6fCXUtBbXxgo97XhaCkNceANQ&usqp=CAU" },
   "star": { url: "https://media.istockphoto.com/id/165722288/vector/all-star-gold.jpg?s=612x612&w=0&k=20&c=rQA8rbrNDMqJowsV4PRIXKkltxWCLTMGk7Cb8C2T42c=" },
-  "surprised": { url: "https://www.shutterstock.com/shutterstock/photos/1791163460/display_1500/stock-vector-kids-playing-with-cat-boy-surprised-with-cat-in-cardboard-1791163460.jpg" },
   "talk": { url: "https://clipart-library.com/2023/107-1070538_images-people-talking-clipart-best-clip-art.png" },
   "television": { url: "https://www.shutterstock.com/image-vector/tv-remote-control-flat-illustration-260nw-1378653383.jpg" },
   "test": { url: "https://tressays.files.wordpress.com/2015/09/test-clip-art-cpa-school-test.png" },
   "woman": { url: "https://static.vecteezy.com/system/resources/previews/009/380/330/original/woman-face-expression-clipart-design-illustration-free-png.png" },
+  "surprised": { url: "https://www.shutterstock.com/shutterstock/photos/1791163460/display_1500/stock-vector-kids-playing-with-cat-boy-surprised-with-cat-in-cardboard-1791163460.jpg" },
+  "father": { url: "https://thumbs.dreamstime.com/z/happy-cute-kid-boy-first-day-school-father-happy-cute-kid-boy-first-day-school-father-168504493.jpg" },
+  "friend": { url: "https://clipart-library.com/img1/1106394.jpg" },
+  "pupil": { url: "https://clipart-library.com/img/1421105.png" },
   // "let's": { url: "" },
   // "in": { url: "" },
   // "near": { url: "" },

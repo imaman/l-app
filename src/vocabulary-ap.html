@@ -176,7 +176,7 @@ class Model {
     }
 
     const oc = this.isOccupied(found.dzid)
-    console.log(`moveTo(${answerWord}) found.zoneSpecifier=${found.dzid} oc=${oc}, mapping=${JSON.stringify(this.mapping)}`)
+    console.log(`moveTo(${answerWord}) found.dzid=${found.dzid} oc=${oc}, mapping=${JSON.stringify(this.mapping)}`)
     if (!oc) {
       this._fireListeners(found.dzid)
     }
@@ -207,9 +207,9 @@ class Model {
     return {element, dzid}
   }
 
-  _fireListeners(zoneSpecifierOrUndefined) {
+  _fireListeners(dzidOrUndefined) {
     for (const l of this.listeners) {
-      l(zoneSpecifierOrUndefined)
+      l(dzidOrUndefined)
     }
   }
 
@@ -231,18 +231,18 @@ function render(theater) {
   const container2 = document.getElementById('container2')
 
   const installDropZone = (element, answerWordOrUndefined) => {
-    const zoneSpecifier = element.id
-    model.addDropZone(zoneSpecifier, answerWordOrUndefined)
+    const dzid = element.id
+    model.addDropZone(dzid, answerWordOrUndefined)
     element.addEventListener('dragover', ev => {
-      const occupied = model.isOccupied(zoneSpecifier)
-      console.log(`is ${zoneSpecifier} occupied? ${occupied}`)
+      const occupied = model.isOccupied(dzid)
+      console.log(`is ${dzid} occupied? ${occupied}`)
       if (!occupied) {
         ev.preventDefault()
       }
     })
 
     element.addEventListener('dragenter', () => {
-      const occupied = model.isOccupied(zoneSpecifier)
+      const occupied = model.isOccupied(dzid)
       if (!occupied) {
         element.classList.add('can-drop')
       }
@@ -252,17 +252,16 @@ function render(theater) {
     })
     element.addEventListener('drop', ev => {
       element.classList.remove('can-drop')
-      let zoneId = element.id
       ev.preventDefault()
       const draggedWord = ev.dataTransfer.getData('text')
 
-      model.dropAnswer(zoneSpecifier, draggedWord)
+      model.dropAnswer(dzid, draggedWord)
       element.appendChild(document.getElementById(`image-${draggedWord}`))
     })
 
     model.addListener(hoveringAboveZone => {
-      const occupied = model.isOccupied(zoneSpecifier)
-      if (occupied || (zoneSpecifier !== hoveringAboveZone)) {
+      const occupied = model.isOccupied(dzid)
+      if (occupied || (dzid !== hoveringAboveZone)) {
         element.classList.remove('can-drop')
         return
       }

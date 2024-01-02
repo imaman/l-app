@@ -129,14 +129,14 @@ function choose(theater) {
 }
 
 class Model {
-  constructor(words, challengeWords) {
+  constructor(challengeWords) {
     this.mapping = {}
     this.listeners = []
-    this.wordList = words
     this.challengeWords = challengeWords
-    for (const w of words) {
-      this.mapping[w] = ''
-    }
+  }
+
+  addDropZone(dzid, answerWordOrUndefined) {
+    this.mapping[dzid] = answerWordOrUndefined ?? ''
   }
 
   addListener(l) {
@@ -147,22 +147,22 @@ class Model {
     return this.challengeWords
   }
 
-  getWordAtZone(challengeWord) {
-    return this.mapping[challengeWord]
+  getWordAtZone(dzid) {
+    return this.mapping[dzid]
   }
 
-  isOccupied(zoneSpecifier) {
-    return Boolean(this.mapping[zoneSpecifier])
+  isOccupied(dzid) {
+    return Boolean(this.mapping[dzid])
   }
 
-  dropAnswer(zoneSpecifier, answerWord) {
+  dropAnswer(dzid, answerWord) {
     for (const [k, v] of Object.entries(this.mapping)) {
       if (v === answerWord) {
         this.mapping[k] = ''
       }
     }
 
-    this.mapping[zoneSpecifier] = answerWord
+    this.mapping[dzid] = answerWord
     this._fireListeners(undefined)
   }
 
@@ -175,7 +175,11 @@ class Model {
       return
     }
 
-    this._fireListeners(found.zoneSpecifier)
+    const oc = this.isOccupied(found.dzid)
+    console.log(`moveTo(${answerWord}) found.zoneSpecifier=${found.dzid} oc=${oc}, mapping=${JSON.stringify(this.mapping)}`)
+    if (!oc) {
+      this._fireListeners(found.dzid)
+    }
   }
 
   moveEnded(answerWord, x, y) {
@@ -184,8 +188,12 @@ class Model {
       return undefined
     }
 
+    if (this.isOccupied(found.dzid)) {
+      return undefined
+    }
 
-    this.dropAnswer(found.zoneSpecifier, answerWord)
+
+    this.dropAnswer(found.dzid, answerWord)
     return found.element
   }
 
@@ -195,16 +203,8 @@ class Model {
       return undefined
     }
 
-    const id = element.id
-
-    let zoneSpecifier
-    if (id.startsWith('answer-')) {
-      zoneSpecifier = Number(id.split('-')[1])
-    } else if (id.startsWith('zone-')) {
-      zoneSpecifier = id.split('-')[1]
-    }
-
-    return {element, zoneSpecifier}
+    const dzid = element.id
+    return {element, dzid}
   }
 
   _fireListeners(zoneSpecifierOrUndefined) {
@@ -225,12 +225,14 @@ function render(theater) {
   const challengeWords = participatingWords.slice(0, 2)
 
   const chosenWords = shuffleStrings(participatingWords)
-  const model = new Model(chosenWords, challengeWords)
+  const model = new Model(challengeWords)
 
   const container = document.getElementById('container')
   const container2 = document.getElementById('container2')
 
-  const installDropZone = (element, zoneSpecifier) => {
+  const installDropZone = (element, answerWordOrUndefined) => {
+    const zoneSpecifier = element.id
+    model.addDropZone(zoneSpecifier, answerWordOrUndefined)
     element.addEventListener('dragover', ev => {
       const occupied = model.isOccupied(zoneSpecifier)
       console.log(`is ${zoneSpecifier} occupied? ${occupied}`)
@@ -301,7 +303,7 @@ function render(theater) {
     decisionZone.style.alignSelf = 'stretch'
     decisionZone.style.minHeight = 128
 
-    installDropZone(decisionZone, at)
+    installDropZone(decisionZone, undefined)
 
     container.appendChild(button)
     container.appendChild(decisionZone)
@@ -309,13 +311,13 @@ function render(theater) {
 
   chosenWords.forEach((at, i) => {
     const ansewrZone = document.createElement('span')
-    ansewrZone.id = `answer-${i}`
+    ansewrZone.id = `answer-${at}`
     ansewrZone.classList.add('zone')
     // ansewrZone.style.gridColumn = "4 / span 1"
     // ansewrZone.style.gridRow = `6 / span 1`
     ansewrZone.style.justifySelf = 'stretch'
     ansewrZone.style.alignSelf = 'stretch'
-    installDropZone(ansewrZone, i)
+    installDropZone(ansewrZone, at)
     container2.appendChild(ansewrZone)
 
     const img = document.createElement('img')
@@ -360,17 +362,15 @@ function render(theater) {
   document.getElementById('check').addEventListener('click', () => {
     let ok = true
     for (const w of model.getChallengeWords()) {
-      const buttonId = `button-${w}`
-      const b = document.getElementById(buttonId)
-      const ans = model.getWordAtZone(w)
+      const ans = model.getWordAtZone(`zone-${w}`)
       if (ans !== w) {
         ok = false
       }
 
+      const buttonId = `button-${w}`
+      const b = document.getElementById(buttonId)
       b.style.borderColor = ans === w ? `#33FF57`: !ans ? 'purple' : '#C70039'
     }
-
-    // document.getElementById('next').classList.toggle('hidden', !ok)
   })
 
   document.getElementById('next').addEventListener('click', () => {

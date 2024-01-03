@@ -13,6 +13,11 @@
     .u {
       color: rgb(192, 91, 23)
     }
+
+    .draggable {
+      cursor: pointer;
+    }
+    
     .button {
       display: flex;
       justify-content: center;
@@ -337,6 +342,7 @@ function render(theater) {
 
     const img = document.createElement('img')
     img.id = `image-${at}`
+    img.classList.add('draggable')
     img.setAttribute('src', theater[at].url)
     img.setAttribute('width', "120")
     img.setAttribute('height', "120")

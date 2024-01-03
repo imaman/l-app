@@ -17,6 +17,14 @@
     .draggable {
       cursor: pointer;
     }
+
+    .answer-text {
+      font-family: "Arial";
+      color: white;
+      font-size: 48;
+      background-color: rgb(130, 0, 22);
+    }
+
     
     .button {
       display: flex;
@@ -72,16 +80,19 @@
       column-gap: 1em;
     }
 
-    .decision-zone {
-      grid-column: 3 / span 1;
-      justify-self: stretch;
-      align-self: stretch;
-      min-height: 128;
+    .centering {
       display: grid;
       grid-template-columns: 1fr;
       grid-template-rows: 1fr;
       align-items: center;
       justify-items: center;
+    }
+
+    .decision-zone {
+      grid-column: 3 / span 1;
+      justify-self: stretch;
+      align-self: stretch;
+      min-height: 128;
     }
 
     #button-bar {
@@ -321,6 +332,7 @@ function render(theater) {
     decisionZone.id = `zone-${at}`
     decisionZone.classList.add('zone')
     decisionZone.classList.add('decision-zone')
+    decisionZone.classList.add('centering')
     decisionZone.style.gridRow = `${i + 1} / span 1`
 
     installDropZone(decisionZone, undefined)
@@ -333,6 +345,7 @@ function render(theater) {
     const ansewrZone = document.createElement('span')
     ansewrZone.id = `answer-${at}`
     ansewrZone.classList.add('zone')
+    ansewrZone.classList.add('centering')
     // ansewrZone.style.gridColumn = "4 / span 1"
     // ansewrZone.style.gridRow = `6 / span 1`
     ansewrZone.style.justifySelf = 'stretch'
@@ -340,12 +353,19 @@ function render(theater) {
     installDropZone(ansewrZone, at)
     container2.appendChild(ansewrZone)
 
-    const img = document.createElement('img')
+    let img
+    if (theater[at].url) {
+      img = document.createElement('img')
+      img.setAttribute('src', theater[at].url)
+      img.setAttribute('width', "120")
+      img.setAttribute('height', "120")
+    } else {
+      img = document.createElement('span')
+      img.classList.add('answer-text')
+      img.innerText = theater[at].text
+    }
     img.id = `image-${at}`
     img.classList.add('draggable')
-    img.setAttribute('src', theater[at].url)
-    img.setAttribute('width', "120")
-    img.setAttribute('height', "120")
     img.setAttribute('draggable', 'true')
     img.addEventListener('dragstart', ev => {
       ev.dataTransfer.setData("text", at);
@@ -458,7 +478,6 @@ function createTheathers() {
   "banana": { url: "https://i.etsystatic.com/32486242/r/il/d4e9f8/4740506004/il_794xN.4740506004_iu58.jpg" },
   "bat": { url: "https://png.pngtree.com/png-clipart/20191120/original/pngtree-lovely-bat-clipart-vector-png-element-png-image_5066344.jpg" },
   "big": { url: "https://pics.clipartpng.com/midle/Elephant_Large_PNG_Clipart-1047.png" },
-  // "best": { url: "" },
   "book": { url: "https://static.vecteezy.com/system/resources/previews/004/319/237/non_2x/opened-book-with-empty-pages-free-vector.jpg" },
   "bus": { url: "https://media.istockphoto.com/id/1335029323/vector/yellow-school-bus-front-view-cartoon-style-vector-illustration-flat-isolated-on-white.jpg?s=612x612&w=0&k=20&c=A4BRd_IeKDa9MvKQ1OROhg94aZBsaVBJkjRdEUahIXU=" },
   "camp": { url: "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3742095/summer-camp-clipart-xl.png" },
@@ -501,14 +520,13 @@ function createTheathers() {
   "clown": { url: "https://clipart-library.com/image_gallery/240300.jpg" },
   "girl": { url: "https://www.clipartmax.com/png/small/2-25869_jumping-girl-my-cute-graphics-girl.png" },
   "surprised": { url: "https://cdn.vectorstock.com/i/1000x1000/22/26/girl-character-surprised-because-gift-box-vector-32712226.webp" },
-  
-  // not ok
-  // "let's": { url: "" },
-  // "in": { url: "" },
-  // "near": { url: "" },
-  // "on": { url: "" },
-  // "under": { url: "" },
-  // "as": { url: "" },
+  "best": { url: "", text: "הכי טוב" },
+  "let's": { url: "", text: "בואו" },
+  "in": { url: "", text: "בתוך" },
+  "near": { url: "", text: "ליד" },
+  "on": { url: "", text: "על" },
+  "under": { url: "", text: "מתחת" },
+  "as": { url: "", text: "כמו" },
 }
 ]
 }

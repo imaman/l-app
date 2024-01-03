@@ -1,550 +1,559 @@
 <html>
-  <style>
-    body {
-      overscroll-behavior: contain;      
-      user-select: none;
-    }
-    .s {
-      color: rgb(118, 184, 161)
-    }
-    .t {
-      color: rgb(130, 0, 22)
-    }
-    .u {
-      color: rgb(192, 91, 23)
-    }
+<style>
+  body {
+    overscroll-behavior: contain;
+    user-select: none;
+  }
 
-    .draggable {
-      cursor: pointer;
-    }
+  .s {
+    color: rgb(118, 184, 161)
+  }
 
-    .answer-text {
-      font-family: "Arial";
-      color: white;
-      font-size: 48;
-      background-color: rgb(130, 0, 22);
-    }
+  .t {
+    color: rgb(130, 0, 22)
+  }
 
-    
-    .button {
-      display: flex;
-      justify-content: center;
-      background-color: bisque;
-      border-radius: 12px;
-      border-style: solid;
-      border-color: black;
-      border-width: 5px;
-      padding: 15px;
-      font-size: 36;
-    }
-    .button:hover {
-      border-color: grey;
-    }
-    .button:active {
-      background-color: chocolate
-    }
+  .u {
+    color: rgb(192, 91, 23)
+  }
 
-    .zone {
-      text-align: center;
-      border-color: peru;
-      background-color: peru;
-      border-style: solid;
-      border-radius: 6px;
-      border-width: 6px;
-      min-height: 128px;
-    }
+  .draggable {
+    cursor: pointer;
+  }
 
-    .can-drop {
-      border-color: blueviolet;
-    }
+  .answer-text {
+    font-family: "Arial";
+    color: white;
+    font-size: 48;
+    background-color: rgb(130, 0, 22);
+  }
 
-    .hidden {
-      display: none;
-    }
 
-    #page {
-      display: grid;
-      row-gap: 4rem;
-      margin-top: 4rem;
-      grid-template-columns: 1fr 8fr 2fr 1fr;
-      grid-template-areas: 
-        ". challenges buttons ."
-        ". answers answers .";
-    }
+  .button {
+    display: flex;
+    justify-content: center;
+    background-color: bisque;
+    border-radius: 12px;
+    border-style: solid;
+    border-color: black;
+    border-width: 5px;
+    padding: 15px;
+    font-size: 36;
+  }
+
+  .button:hover {
+    border-color: grey;
+  }
+
+  .button:active {
+    background-color: chocolate
+  }
+
+  .zone {
+    text-align: center;
+    border-color: peru;
+    background-color: peru;
+    border-style: solid;
+    border-radius: 6px;
+    border-width: 6px;
+    min-height: 128px;
+  }
+
+  .can-drop {
+    border-color: blueviolet;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  #page {
+    display: grid;
+    row-gap: 4rem;
+    margin-top: 4rem;
+    grid-template-columns: 1fr 8fr 2fr 1fr;
+    grid-template-areas:
+      ". challenges buttons ."
+      ". answers answers .";
+  }
+
+  #container {
+    grid-area: challenges;
+    display: grid;
+    grid-template-columns: 1fr 2fr 7fr 2fr;
+    grid-template-rows: auto;
+    row-gap: 1rem;
+    column-gap: 1em;
+  }
+
+  .centering {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .decision-zone {
+    grid-column: 3 / span 1;
+    justify-self: stretch;
+    align-self: stretch;
+    min-height: 128;
+  }
+
+  #button-bar {
+    grid-area: buttons;
+    column-gap: 1em;
+    display: grid;
+    grid-template-columns: 2fr 1fr 3fr 1fr 5fr;
+    grid-template-areas: ". check . next .";
+    align-items: center;
+    justify-items: stretch;
+  }
+
+  #check {
+    grid-area: check;
+  }
+
+  #next {
+    grid-area: next;
+  }
+
+  #container2 {
+    grid-area: answers;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    row-gap: 1rem;
+    column-gap: 1em;
+    grid-auto-flow: row;
+  }
+
+  @media screen and (orientation: portrait) {
     #container {
-      grid-area: challenges;
-      display: grid;
-      grid-template-columns: 1fr 2fr 7fr 2fr;
-      grid-template-rows: auto;
-      row-gap:  1rem;
-      column-gap: 1em;
-    }
-
-    .centering {
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr;
-      align-items: center;
-      justify-items: center;
+      grid-template-columns: 1fr 4fr 6fr 1fr;
     }
 
     .decision-zone {
-      grid-column: 3 / span 1;
-      justify-self: stretch;
-      align-self: stretch;
-      min-height: 128;
+      min-height: 160px;
     }
-
-    #button-bar {
-      grid-area: buttons;
-      column-gap: 1em;
-      display: grid;
-      grid-template-columns: 2fr 1fr 3fr 1fr 5fr;
-      grid-template-areas: ". check . next .";
-      align-items: center;
-      justify-items: stretch;
-    }
-
-    #check {
-      grid-area: check;
-    }
-
-    #next {
-      grid-area: next;
-    }
-
-    #container2 {
-      grid-area: answers;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: auto;
-      row-gap: 1rem;
-      column-gap: 1em;
-      grid-auto-flow: row;
-    }
-
-    @media screen and (orientation: portrait) {
-      #container {
-        grid-template-columns: 1fr 4fr 6fr 1fr;
-      }
-      .decision-zone {
-        min-height: 160px;
-      }
-    }    
-  </style>
+  }
+</style>
 
 <script>
-const voice = window.speechSynthesis.getVoices().find(x => x.name === 'Google US English')
+  const voice = window.speechSynthesis.getVoices().find(x => x.name === 'Google US English')
 
-window.addEventListener('load', () => {
-  const utterance = new SpeechSynthesisUtterance('a')
-  utterance.voice = voice
-  utterance.volume = 1
+  window.addEventListener('load', () => {
+    const utterance = new SpeechSynthesisUtterance('a')
+    utterance.voice = voice
+    utterance.volume = 1
 
-  const d = document.getElementById('d')
-  // for (const words of theaters) {
-  //   for (const w of Object.keys(words)) {
-  //     const entry = words[w]      
-  //     if (entry.url) {
-  //       continue
-  //     }
-  //     const toAdd = document.createElement('div')
-  //     toAdd.style.marginBottom = "16px";
-  //     toAdd.innerHTML = `<a target="_blank" rel="noopener noreferrer" href="https://www.google.com/search?q=image+${w}+clipart&sclient=img&source=hp&uact=5&tbm=isch">${w}</a>`
-  //     d.appendChild(toAdd)
-  //   }
-  // }
+    const d = document.getElementById('d')
+    // for (const words of theaters) {
+    //   for (const w of Object.keys(words)) {
+    //     const entry = words[w]      
+    //     if (entry.url) {
+    //       continue
+    //     }
+    //     const toAdd = document.createElement('div')
+    //     toAdd.style.marginBottom = "16px";
+    //     toAdd.innerHTML = `<a target="_blank" rel="noopener noreferrer" href="https://www.google.com/search?q=image+${w}+clipart&sclient=img&source=hp&uact=5&tbm=isch">${w}</a>`
+    //     d.appendChild(toAdd)
+    //   }
+    // }
 
-  const theaters = createTheathers()
-  render(theaters[Math.trunc(Math.random() * theaters.length)])
-})
+    const theaters = createTheathers()
+    render(theaters[Math.trunc(Math.random() * theaters.length)])
+  })
 
-function shuffleStrings(strings) {
-  const arr = strings.map(w => ({w, rand: self.crypto.randomUUID()}))
-  arr.sort((lhs, rhs) => lhs.rand.localeCompare(rhs.rand))
-  return arr.map(at => at.w)
-}
-
-function choose(theater) {
-  return shuffleStrings(Object.keys(theater)).slice(0, 9)
-}
-
-class Model {
-  constructor(challengeWords) {
-    this.mapping = {}
-    this.listeners = []
-    this.challengeWords = challengeWords
+  function shuffleStrings(strings) {
+    const arr = strings.map(w => ({ w, rand: self.crypto.randomUUID() }))
+    arr.sort((lhs, rhs) => lhs.rand.localeCompare(rhs.rand))
+    return arr.map(at => at.w)
   }
 
-  addDropZone(dzid, answerWordOrUndefined) {
-    this.mapping[dzid] = answerWordOrUndefined ?? ''
+  function choose(theater) {
+    return shuffleStrings(Object.keys(theater)).slice(0, 9)
   }
 
-  addListener(l) {
-    this.listeners.push(l)
-  }
-
-  getChallengeWords() {
-    return this.challengeWords
-  }
-
-  getWordAtZone(dzid) {
-    return this.mapping[dzid]
-  }
-
-  canLandAt(dzid) {
-    const isOccupied = Boolean(this.mapping[dzid])
-    return !isOccupied
-  }
-
-  dropAnswer(dzid, answerWord) {
-    for (const [k, v] of Object.entries(this.mapping)) {
-      if (v === answerWord) {
-        this.mapping[k] = ''
-      }
+  class Model {
+    constructor(challengeWords) {
+      this.mapping = {}
+      this.listeners = []
+      this.challengeWords = challengeWords
     }
 
-    this.mapping[dzid] = answerWord
-    this._fireListeners(undefined)
-  }
+    addDropZone(dzid, answerWordOrUndefined) {
+      this.mapping[dzid] = answerWordOrUndefined ?? ''
+    }
 
+    addListener(l) {
+      this.listeners.push(l)
+    }
 
+    getChallengeWords() {
+      return this.challengeWords
+    }
 
-  moveTo(answerWord, x, y) {
-    const found = this._findZone(x, y)
-    if (!found) {
+    getWordAtZone(dzid) {
+      return this.mapping[dzid]
+    }
+
+    canLandAt(dzid) {
+      const isOccupied = Boolean(this.mapping[dzid])
+      return !isOccupied
+    }
+
+    dropAnswer(dzid, answerWord) {
+      for (const [k, v] of Object.entries(this.mapping)) {
+        if (v === answerWord) {
+          this.mapping[k] = ''
+        }
+      }
+
+      this.mapping[dzid] = answerWord
       this._fireListeners(undefined)
-      return
     }
 
-    const canLand = this.canLandAt(found.dzid)
-    if (canLand) {
-      this._fireListeners(found.dzid)
-    }
-  }
-
-  moveEnded(answerWord, x, y) {
-    const found = this._findZone(x, y)
-    if (!found) {
-      return undefined
-    }
-
-    if (!this.canLandAt(found.dzid)) {
-      return undefined
-    }
-    
-    this.dropAnswer(found.dzid, answerWord)
-    return found.element
-  }
-
-  _findZone(x, y) {
-    const element = document.elementsFromPoint(x, y).find(e => e.classList.contains('zone'))
-    if (!element) {
-      return undefined
-    }
-
-    const dzid = element.id
-    return {element, dzid}
-  }
-
-  _fireListeners(dzidOrUndefined) {
-    for (const l of this.listeners) {
-      l(dzidOrUndefined)
-    }
-  }
 
 
-  toJSON() {
-    return this.mapping
-  }
-}
-
-function render(theater) {
-  const participatingWords = choose(theater)
-
-  const challengeWords = participatingWords.slice(0, 2)
-
-  const chosenWords = shuffleStrings(participatingWords)
-  const model = new Model(challengeWords)
-
-  const container = document.getElementById('container')
-  const container2 = document.getElementById('container2')
-
-  const installDropZone = (element, initiallyLandedWordOrUndefined) => {
-    const dzid = element.id
-    model.addDropZone(dzid, initiallyLandedWordOrUndefined)
-    element.addEventListener('dragover', ev => {
-      if (model.canLandAt(dzid)) {
-        ev.preventDefault()
+    moveTo(answerWord, x, y) {
+      const found = this._findZone(x, y)
+      if (!found) {
+        this._fireListeners(undefined)
+        return
       }
-    })
 
-    element.addEventListener('dragenter', () => {
-      if (model.canLandAt(dzid)) {
-        element.classList.add('can-drop')
+      const canLand = this.canLandAt(found.dzid)
+      if (canLand) {
+        this._fireListeners(found.dzid)
       }
-    })
-    element.addEventListener('dragleave', () => {
-      element.classList.remove('can-drop')
-    })
-    element.addEventListener('drop', ev => {
-      element.classList.remove('can-drop')
-      ev.preventDefault()
-      const draggedWord = ev.dataTransfer.getData('text')
+    }
 
-      model.dropAnswer(dzid, draggedWord)
-      element.appendChild(document.getElementById(`image-${draggedWord}`))
-    })
+    moveEnded(answerWord, x, y) {
+      const found = this._findZone(x, y)
+      if (!found) {
+        return undefined
+      }
 
-    model.addListener(hoveringAboveZone => {
-      if (model.canLandAt(hoveringAboveZone) && (hoveringAboveZone === dzid)) {
-        element.classList.add('can-drop')
-      } else {
+      if (!this.canLandAt(found.dzid)) {
+        return undefined
+      }
+
+      this.dropAnswer(found.dzid, answerWord)
+      return found.element
+    }
+
+    _findZone(x, y) {
+      const element = document.elementsFromPoint(x, y).find(e => e.classList.contains('zone'))
+      if (!element) {
+        return undefined
+      }
+
+      const dzid = element.id
+      return { element, dzid }
+    }
+
+    _fireListeners(dzidOrUndefined) {
+      for (const l of this.listeners) {
+        l(dzidOrUndefined)
+      }
+    }
+
+
+    toJSON() {
+      return this.mapping
+    }
+  }
+
+  function render(theater) {
+    const participatingWords = choose(theater)
+
+    const challengeWords = participatingWords.slice(0, 2)
+
+    const chosenWords = shuffleStrings(participatingWords)
+    const model = new Model(challengeWords)
+
+    const container = document.getElementById('container')
+    const container2 = document.getElementById('container2')
+
+    const installDropZone = (element, initiallyLandedWordOrUndefined) => {
+      const dzid = element.id
+      model.addDropZone(dzid, initiallyLandedWordOrUndefined)
+      element.addEventListener('dragover', ev => {
+        if (model.canLandAt(dzid)) {
+          ev.preventDefault()
+        }
+      })
+
+      element.addEventListener('dragenter', () => {
+        if (model.canLandAt(dzid)) {
+          element.classList.add('can-drop')
+        }
+      })
+      element.addEventListener('dragleave', () => {
         element.classList.remove('can-drop')
+      })
+      element.addEventListener('drop', ev => {
+        element.classList.remove('can-drop')
+        ev.preventDefault()
+        const draggedWord = ev.dataTransfer.getData('text')
+
+        model.dropAnswer(dzid, draggedWord)
+        element.appendChild(document.getElementById(`image-${draggedWord}`))
+      })
+
+      model.addListener(hoveringAboveZone => {
+        if (model.canLandAt(hoveringAboveZone) && (hoveringAboveZone === dzid)) {
+          element.classList.add('can-drop')
+        } else {
+          element.classList.remove('can-drop')
+        }
+      })
+    }
+    challengeWords.forEach((at, i) => {
+      const button = document.createElement('div')
+      button.id = `button-${at}`
+      button.classList.add('button')
+      button.innerText = `🗣️ ${at}`
+      button.style.borderColor = 'purple'
+      button.style.borderStyle = 'solid'
+      button.style.borderRadius = '6px'
+      button.style.fontSize = '36'
+
+      button.style.gridColumn = "2 / span 1"
+      button.style.gridRow = `${i + 1} / span 1`
+      button.style.justifySelf = 'right'
+      button.style.alignSelf = 'center'
+
+      button.addEventListener('click', () => {
+        const utterance = new SpeechSynthesisUtterance('')
+        utterance.text = at
+        utterance.voice = voice
+        utterance.rate = 0.8
+        utterance.volum = 1
+        speechSynthesis.speak(utterance);
+      })
+
+      const decisionZone = document.createElement('span')
+      decisionZone.id = `zone-${at}`
+      decisionZone.classList.add('zone')
+      decisionZone.classList.add('decision-zone')
+      decisionZone.classList.add('centering')
+      decisionZone.style.gridRow = `${i + 1} / span 1`
+
+      installDropZone(decisionZone, undefined)
+
+      container.appendChild(button)
+      container.appendChild(decisionZone)
+    })
+
+    chosenWords.forEach((at, i) => {
+      const ansewrZone = document.createElement('span')
+      ansewrZone.id = `answer-${at}`
+      ansewrZone.classList.add('zone')
+      ansewrZone.classList.add('centering')
+      // ansewrZone.style.gridColumn = "4 / span 1"
+      // ansewrZone.style.gridRow = `6 / span 1`
+      ansewrZone.style.justifySelf = 'stretch'
+      ansewrZone.style.alignSelf = 'stretch'
+      installDropZone(ansewrZone, at)
+      container2.appendChild(ansewrZone)
+
+      let img
+      if (theater[at].url) {
+        img = document.createElement('img')
+        img.setAttribute('src', theater[at].url)
+        img.setAttribute('width', "120")
+        img.setAttribute('height', "120")
+      } else {
+        img = document.createElement('span')
+        img.classList.add('answer-text')
+        img.innerText = theater[at].text
       }
+      img.id = `image-${at}`
+      img.classList.add('draggable')
+      img.setAttribute('draggable', 'true')
+      img.addEventListener('dragstart', ev => {
+        ev.dataTransfer.setData("text", at);
+      })
+
+
+      img.addEventListener('touchmove', (e) => {
+        const touchLocation = e.targetTouches[0]
+
+        img.style.position = 'absolute'
+        const x = touchLocation.pageX
+        const y = touchLocation.pageY
+
+        img.style.left = `${x}px`
+        img.style.top = `${y}px`
+
+        model.moveTo(at, x, y)
+      })
+
+      img.addEventListener('touchend', (e) => {
+        const x = parseInt(img.style.left)
+        const y = parseInt(img.style.top)
+
+        const found = model.moveEnded(at, x, y)
+        if (found) {
+          found.appendChild(img)
+        }
+        img.style.position = ''
+      })
+
+      ansewrZone.appendChild(img)
+    })
+
+
+    document.getElementById('check').addEventListener('click', () => {
+      let ok = true
+      for (const w of model.getChallengeWords()) {
+        const ans = model.getWordAtZone(`zone-${w}`)
+        if (ans !== w) {
+          ok = false
+        }
+
+        const buttonId = `button-${w}`
+        const b = document.getElementById(buttonId)
+        b.style.borderColor = ans === w ? `#33FF57` : !ans ? 'purple' : '#C70039'
+      }
+    })
+
+    document.getElementById('next').addEventListener('click', () => {
+      location.reload()
     })
   }
-  challengeWords.forEach((at, i) => {
-    const button = document.createElement('div')
-    button.id = `button-${at}`
-    button.classList.add('button')
-    button.innerText = `🗣️ ${at}`
-    button.style.borderColor = 'purple'
-    button.style.borderStyle = 'solid'
-    button.style.borderRadius = '6px'
-    button.style.fontSize = '36'
-
-    button.style.gridColumn = "2 / span 1"
-    button.style.gridRow = `${i + 1} / span 1`
-    button.style.justifySelf = 'right'
-    button.style.alignSelf = 'center'
-
-    button.addEventListener('click', () => {
-      const utterance = new SpeechSynthesisUtterance('')
-      utterance.text = at
-      utterance.voice = voice
-      utterance.rate = 0.8
-      utterance.volum = 1
-      speechSynthesis.speak(utterance);
-    })
-
-    const decisionZone = document.createElement('span')
-    decisionZone.id = `zone-${at}`
-    decisionZone.classList.add('zone')
-    decisionZone.classList.add('decision-zone')
-    decisionZone.classList.add('centering')
-    decisionZone.style.gridRow = `${i + 1} / span 1`
-
-    installDropZone(decisionZone, undefined)
-
-    container.appendChild(button)
-    container.appendChild(decisionZone)
-  })
-
-  chosenWords.forEach((at, i) => {
-    const ansewrZone = document.createElement('span')
-    ansewrZone.id = `answer-${at}`
-    ansewrZone.classList.add('zone')
-    ansewrZone.classList.add('centering')
-    // ansewrZone.style.gridColumn = "4 / span 1"
-    // ansewrZone.style.gridRow = `6 / span 1`
-    ansewrZone.style.justifySelf = 'stretch'
-    ansewrZone.style.alignSelf = 'stretch'
-    installDropZone(ansewrZone, at)
-    container2.appendChild(ansewrZone)
-
-    let img
-    if (theater[at].url) {
-      img = document.createElement('img')
-      img.setAttribute('src', theater[at].url)
-      img.setAttribute('width', "120")
-      img.setAttribute('height', "120")
-    } else {
-      img = document.createElement('span')
-      img.classList.add('answer-text')
-      img.innerText = theater[at].text
-    }
-    img.id = `image-${at}`
-    img.classList.add('draggable')
-    img.setAttribute('draggable', 'true')
-    img.addEventListener('dragstart', ev => {
-      ev.dataTransfer.setData("text", at);
-    })
 
 
-    img.addEventListener('touchmove', (e) => {
-      const touchLocation = e.targetTouches[0]
-
-      img.style.position = 'absolute'
-      const x = touchLocation.pageX
-      const y = touchLocation.pageY
-
-      img.style.left = `${x}px`
-      img.style.top = `${y}px`
-
-      model.moveTo(at, x, y)
-    })
-    
-    img.addEventListener('touchend', (e) => {
-      const x = parseInt(img.style.left)
-      const y = parseInt(img.style.top)
-
-      const found = model.moveEnded(at, x, y)
-      if (found) {
-        found.appendChild(img)
-      }
-      img.style.position = ''
-    })    
-
-    ansewrZone.appendChild(img)
-  })
-
-
-  document.getElementById('check').addEventListener('click', () => {
-    let ok = true
-    for (const w of model.getChallengeWords()) {
-      const ans = model.getWordAtZone(`zone-${w}`)
-      if (ans !== w) {
-        ok = false
-      }
-
-      const buttonId = `button-${w}`
-      const b = document.getElementById(buttonId)
-      b.style.borderColor = ans === w ? `#33FF57`: !ans ? 'purple' : '#C70039'
-    }
-  })
-
-  document.getElementById('next').addEventListener('click', () => {
-    location.reload()
-  })
-}
-
-
-function createTheathers() {
+  function createTheathers() {
     return [{
-  "one": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/one-706897_1280.jpg" },
-  "two": { url: "https://cdn.pixabay.com/photo/2012/05/04/10/18/two-47085_1280.png" },
-  "three": { url: "https://c8.alamy.com/comp/FE0XKN/the-number-three-as-a-polished-golden-object-FE0XKN.jpg" },
-  "four": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/four-706894_1280.jpg" },
-  "five": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/five-706893_960_720.jpg" },
-  "six": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/six-706892_1280.jpg" },
-  "seven": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/seven-706891_960_720.jpg" },
-  "eight": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/eight-706890_1280.jpg" },
-  "nine": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/nine-706889_960_720.jpg" },
-  "bed": { url: "https://media.istockphoto.com/id/1149521461/vector/wooden-bed-with-pillow.jpg?s=612x612&w=0&k=20&c=9fu6sv92j5_7YY9UEyVChCDOojnbJnTjv-wXyKeGt5Q=" },
-  "balloon": { url: "https://media.istockphoto.com/id/1281511645/vector/bunch-of-inflatable-balloons-in-cartoon-style-isolated-on-white-background-vector.jpg?s=612x612&w=0&k=20&c=VngxtS7KHH_VhF2HCaPc3BiBAs9izXXtX-5SI6UpRpo=" },
-  "doctor": { url: "https://static.vecteezy.com/system/resources/previews/002/896/807/non_2x/female-doctor-using-her-digital-tablet-free-vector.jpg" },
-  "fall off": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCZN4uXCgkJxbV8DQslDz-wf5yZV6kw5qiXlDQCpW7DsQH_dlhx8ugFFG8I5oBms9wg2g&usqp=CAU" },
-  "green": { url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACoCAMAAABt9SM9AAAAA1BMVEVl/wB6QsljAAAAR0lEQVR4nO3BAQEAAACCIP+vbkhAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO8GxYgAAb0jQ/cAAAAASUVORK5CYII=" },
-  "jump": { url: "https://images.unsplash.com/photo-1613122707153-070406e9fd27?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGp1bXB8ZW58MHx8MHx8fDA%3D" },
-  "listen": { url: "https://clipart-library.com/8300/2368/5555.png" },
-  "monkey": { url: "https://pics.craiyon.com/2023-06-16/f99a664cc9354f73bc019707f658316c.webp" },
-  "mother": { url: "https://cdn2.vectorstock.com/i/1000x1000/70/61/dark-skinned-mother-and-baby-vector-23827061.jpg" },
-  "quiet": { url: "https://clipart-library.com/8300/2368/woman-secret-be-quiet-clipart-xl.png" },
-  "black": { url: "https://m.media-amazon.com/images/I/61hX1zqzJhL._AC_UF350,350_QL80_.jpg" },
-  "blue": { url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAA1BMVEUAAP+KeNJXAAAASElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AcUIAAFkqh/QAAAAAElFTkSuQmCC" },
-  "brown": { url: "https://img.freepik.com/free-photo/brown-concrete-wall-with-scratches-vector_53876-143109.jpg?size=626&ext=jpg" },
-  "orange": { url: "https://t4.ftcdn.net/jpg/05/06/41/89/360_F_506418953_5R5MQsN4UJ4hLgqnKlltS44wbQ33LhIU.jpg" },
-  "pink": { url: "https://htmlcolorcodes.com/assets/images/colors/pastel-pink-color-solid-background-1920x1080.png" },
-  "purple": { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Purple_website.svg/1200px-Purple_website.svg.png" },
-  "red": { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Solid_red.svg/512px-Solid_red.svg.png?20150316143248" },
-  "white": { url: "https://thistlewoodfarms.com/wp-content/uploads/2013/05/SW-Alabaster.jpg" },
-  "yellow": { url: "https://images.unsplash.com/photo-1615457938971-3ab61c1c0d57?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8eWVsbG93fGVufDB8fDB8fHww" },
-  "sit down": { url: "https://i.pinimg.com/736x/ce/8e/c8/ce8ec86c342e65276ef8f5c2518d0498.jpg" },
-  "stand up": { url: "https://clipart-library.com/image_gallery/4091.png" },
-  "baby": { url: "https://static.vecteezy.com/system/resources/previews/013/740/512/original/smiling-baby-swaddle-clipart-simple-cute-smile-baby-swaddle-in-blue-wrap-flat-illustration-happy-infant-baby-swaddling-cartoon-style-kids-baby-shower-newborn-and-nursery-decoration-concept-vector.jpg" },
-  "ball": { url: "https://w7.pngwing.com/pngs/870/952/png-transparent-beach-ball-ball-game-computer-wallpaper-sphere-thumbnail.png" },
-  "brother": { url: "https://media.istockphoto.com/id/937920484/photo/older-brother-on-the-sofa-hugging-younger-brother.jpg?s=612x612&w=0&k=20&c=FKJR3oEQ3vdPAZ230E91eO4y3XWMkir-tl43fgXvD-o=" },
-  "door": { url: "https://media.istockphoto.com/id/166270889/photo/front-door.jpg?s=612x612&w=0&k=20&c=bVW4xlNtzYLuf8w2PlkeU2EKM8ZHNC8cQfyrkEw_JZA=" },
-  "family": { url: "https://i.pinimg.com/originals/fc/63/8f/fc638fbfb050efbb94a4a8f8c838bca5.png" },
-  "happy": { url: "https://st.depositphotos.com/4058993/60405/i/450/depositphotos_604056392-stock-photo-happy-faces-ball-yellow-background.jpg" },
-  "help": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj5EXDIlaT9CYUGvZYBYs2Qp2kqbQT-BMvnA&usqp=CAU" },
-  "play": { url: "https://t3.ftcdn.net/jpg/00/26/75/98/360_F_26759815_b7gud3HxMEKd8IIQxRbX0RWlEUvoepH5.jpg" },
-  "left": { url: "https://clipart-library.com/images/LTd5arLKc.png" },
-  "right": { url: "https://media.istockphoto.com/id/1179860629/vector/traffic-sign-turn-right-warning-attention-vector-on-yellow-background.jpg?s=612x612&w=0&k=20&c=wJZPwRe9BEg5_l3LWTI_4mBmYk6MHDxXpGoiFEMEDaE=" },
-  "roof": { url: "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/79603/rooftop-clipart-xl.png" },
-  "sad": { url: "https://media.istockphoto.com/id/1055219634/vector/sad-face-icon-unhappy-face-symbol.jpg?s=612x612&w=0&k=20&c=G1_0M4TD3rxt7WQfSDoBrpVr7k8AsnO0T0ZAtKtkqjs=" },
-  "sister": { url: "https://media.istockphoto.com/id/1326006684/vector/cute-little-girl-say-hello-with-young-sister.jpg?s=612x612&w=0&k=20&c=-agsDu8SWCsGdFC6f4pOxO1Rq7ejKSdyWiH3asSQUUM=" },
-  "stop": { url: "https://media.istockphoto.com/id/1128230184/vector/no-entry-sign.jpg?s=612x612&w=0&k=20&c=npXuHBAk3NJHgDh7cFEaRWHT_gUGnvCb4_MIGAT9FjE=" },
-  "tree": { url: "https://pics.clipartpng.com/midle/Green_Tree_PNG_Clip_Art-2888.png" },
-  "window": { url: "https://i.pinimg.com/474x/39/0a/aa/390aaa0fddc7e538b5a071d4121f875e.jpg" },
-  "yard": { url: "https://thumbs.dreamstime.com/b/wood-fence-backyard-wood-fence-backyard-green-garden-grass-trees-flowers-clouds-115904562.jpg" },
-  "yes": { url: "https://png.pngtree.com/element_pic/17/04/16/e05b5badff5b39f08b77da6be0869657.jpg" },
-  "afraid": { url: "https://thumbs.dreamstime.com/b/man-standing-chair-afraid-rat-76766270.jpg" },
-  "ant": { url: "https://classroomclipart.com/image/static7/preview2/cute-cartoon-ant-clipart-53824.jpg" },
-  "apple": { url: "https://i.etsystatic.com/15835007/r/il/11ce0f/3277472654/il_794xN.3277472654_f3p9.jpg" },
-  "ask": { url: "https://classroomclipart.com/images/gallery/Clipart/School/girl-ask-question-in-classroom-school-clipart.jpg" },
-  "bag": { url: "https://png.pngtree.com/png-vector/20220705/ourmid/pngtree-blue-school-bag-clipart-design-png-image_5683607.png" },
-  "banana": { url: "https://i.etsystatic.com/32486242/r/il/d4e9f8/4740506004/il_794xN.4740506004_iu58.jpg" },
-  "bat": { url: "https://png.pngtree.com/png-clipart/20191120/original/pngtree-lovely-bat-clipart-vector-png-element-png-image_5066344.jpg" },
-  "big": { url: "https://pics.clipartpng.com/midle/Elephant_Large_PNG_Clipart-1047.png" },
-  "book": { url: "https://static.vecteezy.com/system/resources/previews/004/319/237/non_2x/opened-book-with-empty-pages-free-vector.jpg" },
-  "bus": { url: "https://media.istockphoto.com/id/1335029323/vector/yellow-school-bus-front-view-cartoon-style-vector-illustration-flat-isolated-on-white.jpg?s=612x612&w=0&k=20&c=A4BRd_IeKDa9MvKQ1OROhg94aZBsaVBJkjRdEUahIXU=" },
-  "camp": { url: "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3742095/summer-camp-clipart-xl.png" },
-  "cat": { url: "https://classroomclipart.com/image/static7/preview2/cute-korat-cat-with-long-tail-60390.jpg" },
-  "classroom": { url: "https://png.pngtree.com/png-clipart/20210108/ourmid/pngtree-classroom-clipart-kindergarten-indoor-classroom-png-image_2700960.jpg" },
-  "crayons": { url: "https://clipart-library.com/2023/172-1723010_crayons-image-cute-crayon-clip-art.png" },
-  "cut": { url: "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/59766/sausage-cutting-clipart-md.png" },
-  "desk": { url: "https://t3.ftcdn.net/jpg/00/47/16/96/360_F_47169640_82yK24mr8IcAi0yYoXQjCZI0I6YK45g3.jpg" },
-  "egg": { url: "https://img.freepik.com/free-vector/isolated-chicken-egg-cartoon-style_1308-114362.jpg" },
-  "elephant": { url: "https://classroomclipart.com/images/gallery/Clipart/Animals/Elephant_Clipart/cute-young-elephant-clipart.jpg" },
-  "glue": { url: "https://i.pinimg.com/564x/e3/0d/11/e30d116cfd2715b6b88fb5a3a96303d0.jpg" },
-  "library": { url: "https://www.shutterstock.com/image-vector/interior-design-school-library-illustration-260nw-2114033597.jpg" },
-  "mad": { url: "https://www.pngitem.com/pimgs/m/518-5188828_mad-face-clipart-hd-png-download.png" },
-  "teacher": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg9I3uRHr-NyjOm9gvk6tMSJ1CSq93hmnHVQ&usqp=CAU" },
-  "paper": { url: "https://clipart-library.com/data_images/64750.jpg" },
-  "pen": { url: "https://png.pngtree.com/element_our/20190603/ourmid/pngtree-blue-writing-pen-illustration-image_1427760.jpg" },
-  "pencil": { url: "https://clipart-library.com/new_gallery/pencil-clipart-7.png" },
-  "poster": { url: "https://clipart-library.com/image_gallery/256434.gif" },
-  "read": { url: "https://thumb.ac-illust.com/34/34ccedb31fb1afbf3a69ae6d2afb144c_w.jpeg" },
-  "ruler": { url: "https://www.shutterstock.com/image-vector/vector-cartoon-yellow-ruler-on-600nw-651630670.jpg" },
-  "school": { url: "https://img.freepik.com/free-vector/large-school-building-scene_1308-32058.jpg" },
-  "small": { url: "https://thumbs.dreamstime.com/b/hand-showing-tiny-small-size-sketch-vector-hand-gesture-showing-tiny-small-size-sketch-engraving-vector-illustration-t-shirt-163663231.jpg" },
-  "snake": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrcWjkB_RoW6fCXUtBbXxgo97XhaCkNceANQ&usqp=CAU" },
-  "star": { url: "https://media.istockphoto.com/id/165722288/vector/all-star-gold.jpg?s=612x612&w=0&k=20&c=rQA8rbrNDMqJowsV4PRIXKkltxWCLTMGk7Cb8C2T42c=" },
-  "talk": { url: "https://clipart-library.com/2023/107-1070538_images-people-talking-clipart-best-clip-art.png" },
-  "television": { url: "https://www.shutterstock.com/image-vector/tv-remote-control-flat-illustration-260nw-1378653383.jpg" },
-  "test": { url: "https://tressays.files.wordpress.com/2015/09/test-clip-art-cpa-school-test.png" },
-  "pupil": { url: "https://clipart-library.com/newhp/raised-hand-pupil-clipart-md.png" },
-  "father": { url: "https://img.freepik.com/premium-vector/father-his-cute-little-daughter-happy-fathers-day-cartoon-illustration-isolated-white-backg_723224-1976.jpg" },
-  "friend": { url: "https://clipart-library.com/img1/851029.png" },
-  "house": { url: "https://i.pinimg.com/736x/6a/aa/fe/6aaafefd23a9955c602ca8892d7f77c2.jpg" },
-  "ten": { url: "https://clipart-library.com/data_images/366187.jpg" },
-  "chair": { url: "https://i.pinimg.com/564x/29/6d/8d/296d8d2fd9e652cd717f5591fbe47eff.jpg" },
-  "boy": { url: "https://illustoon.com/photo/4044.png" },
-  "no": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8pdcZ0iO4Ft-3cq8jIjoeW-lY89bg9TtbEQ&usqp=CAU" },
-  "alligator": { url: "https://classroomclipart.com/image/static7/preview2/alligator-cartoon-character-standing-on-back-legs--clipart-55814.jpg" },
-  "cake": { url: "https://png.pngtree.com/png-clipart/20191123/original/pngtree-cute-birthday-cake-vector-illustration-with-pink-color-isolated-on-white-png-image_5194493.jpg" },
-  "woman": { url: "https://thumbs.dreamstime.com/b/young-woman-face-cartoon-young-woman-face-cartoon-vector-illustration-graphic-design-138586440.jpg" },
-  "scissors": { url: "https://classroomclipart.com/image/static7/preview2/schoolscissorscoloricons-60032.jpg" },
-  "clown": { url: "https://clipart-library.com/image_gallery/240300.jpg" },
-  "girl": { url: "https://www.clipartmax.com/png/small/2-25869_jumping-girl-my-cute-graphics-girl.png" },
-  "surprised": { url: "https://cdn.vectorstock.com/i/1000x1000/22/26/girl-character-surprised-because-gift-box-vector-32712226.webp" },
-  "best": { url: "", text: "הכי טוב" },
-  "let's": { url: "", text: "בואו" },
-  "in": { url: "", text: "בתוך" },
-  "near": { url: "", text: "ליד" },
-  "on": { url: "", text: "על" },
-  "under": { url: "", text: "מתחת" },
-  "as": { url: "", text: "כמו" },
-}
-]
-}
+      "one": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/one-706897_1280.jpg" },
+      "two": { url: "https://cdn.pixabay.com/photo/2012/05/04/10/18/two-47085_1280.png" },
+      "three": { url: "https://c8.alamy.com/comp/FE0XKN/the-number-three-as-a-polished-golden-object-FE0XKN.jpg" },
+      "four": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/four-706894_1280.jpg" },
+      "five": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/five-706893_960_720.jpg" },
+      "six": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/six-706892_1280.jpg" },
+      "seven": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/seven-706891_960_720.jpg" },
+      "eight": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/eight-706890_1280.jpg" },
+      "nine": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/nine-706889_960_720.jpg" },
+      "bed": { url: "https://media.istockphoto.com/id/1149521461/vector/wooden-bed-with-pillow.jpg?s=612x612&w=0&k=20&c=9fu6sv92j5_7YY9UEyVChCDOojnbJnTjv-wXyKeGt5Q=" },
+      "balloon": { url: "https://media.istockphoto.com/id/1281511645/vector/bunch-of-inflatable-balloons-in-cartoon-style-isolated-on-white-background-vector.jpg?s=612x612&w=0&k=20&c=VngxtS7KHH_VhF2HCaPc3BiBAs9izXXtX-5SI6UpRpo=" },
+      "doctor": { url: "https://static.vecteezy.com/system/resources/previews/002/896/807/non_2x/female-doctor-using-her-digital-tablet-free-vector.jpg" },
+      "fall off": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCZN4uXCgkJxbV8DQslDz-wf5yZV6kw5qiXlDQCpW7DsQH_dlhx8ugFFG8I5oBms9wg2g&usqp=CAU" },
+      "green": { url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACoCAMAAABt9SM9AAAAA1BMVEVl/wB6QsljAAAAR0lEQVR4nO3BAQEAAACCIP+vbkhAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAO8GxYgAAb0jQ/cAAAAASUVORK5CYII=" },
+      "jump": { url: "https://images.unsplash.com/photo-1613122707153-070406e9fd27?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGp1bXB8ZW58MHx8MHx8fDA%3D" },
+      "listen": { url: "https://clipart-library.com/8300/2368/5555.png" },
+      "monkey": { url: "https://pics.craiyon.com/2023-06-16/f99a664cc9354f73bc019707f658316c.webp" },
+      "mother": { url: "https://cdn2.vectorstock.com/i/1000x1000/70/61/dark-skinned-mother-and-baby-vector-23827061.jpg" },
+      "quiet": { url: "https://clipart-library.com/8300/2368/woman-secret-be-quiet-clipart-xl.png" },
+      "black": { url: "https://m.media-amazon.com/images/I/61hX1zqzJhL._AC_UF350,350_QL80_.jpg" },
+      "blue": { url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQMAAADCCAMAAAB6zFdcAAAAA1BMVEUAAP+KeNJXAAAASElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIC3AcUIAAFkqh/QAAAAAElFTkSuQmCC" },
+      "brown": { url: "https://img.freepik.com/free-photo/brown-concrete-wall-with-scratches-vector_53876-143109.jpg?size=626&ext=jpg" },
+      "orange": { url: "https://t4.ftcdn.net/jpg/05/06/41/89/360_F_506418953_5R5MQsN4UJ4hLgqnKlltS44wbQ33LhIU.jpg" },
+      "pink": { url: "https://htmlcolorcodes.com/assets/images/colors/pastel-pink-color-solid-background-1920x1080.png" },
+      "purple": { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Purple_website.svg/1200px-Purple_website.svg.png" },
+      "red": { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Solid_red.svg/512px-Solid_red.svg.png?20150316143248" },
+      "white": { url: "https://thistlewoodfarms.com/wp-content/uploads/2013/05/SW-Alabaster.jpg" },
+      "yellow": { url: "https://images.unsplash.com/photo-1615457938971-3ab61c1c0d57?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8eWVsbG93fGVufDB8fDB8fHww" },
+      "sit down": { url: "https://i.pinimg.com/736x/ce/8e/c8/ce8ec86c342e65276ef8f5c2518d0498.jpg" },
+      "stand up": { url: "https://clipart-library.com/image_gallery/4091.png" },
+      "baby": { url: "https://static.vecteezy.com/system/resources/previews/013/740/512/original/smiling-baby-swaddle-clipart-simple-cute-smile-baby-swaddle-in-blue-wrap-flat-illustration-happy-infant-baby-swaddling-cartoon-style-kids-baby-shower-newborn-and-nursery-decoration-concept-vector.jpg" },
+      "ball": { url: "https://w7.pngwing.com/pngs/870/952/png-transparent-beach-ball-ball-game-computer-wallpaper-sphere-thumbnail.png" },
+      "brother": { url: "https://media.istockphoto.com/id/937920484/photo/older-brother-on-the-sofa-hugging-younger-brother.jpg?s=612x612&w=0&k=20&c=FKJR3oEQ3vdPAZ230E91eO4y3XWMkir-tl43fgXvD-o=" },
+      "door": { url: "https://media.istockphoto.com/id/166270889/photo/front-door.jpg?s=612x612&w=0&k=20&c=bVW4xlNtzYLuf8w2PlkeU2EKM8ZHNC8cQfyrkEw_JZA=" },
+      "family": { url: "https://i.pinimg.com/originals/fc/63/8f/fc638fbfb050efbb94a4a8f8c838bca5.png" },
+      "happy": { url: "https://st.depositphotos.com/4058993/60405/i/450/depositphotos_604056392-stock-photo-happy-faces-ball-yellow-background.jpg" },
+      "help": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj5EXDIlaT9CYUGvZYBYs2Qp2kqbQT-BMvnA&usqp=CAU" },
+      "play": { url: "https://t3.ftcdn.net/jpg/00/26/75/98/360_F_26759815_b7gud3HxMEKd8IIQxRbX0RWlEUvoepH5.jpg" },
+      "left": { url: "https://clipart-library.com/images/LTd5arLKc.png" },
+      "right": { url: "https://media.istockphoto.com/id/1179860629/vector/traffic-sign-turn-right-warning-attention-vector-on-yellow-background.jpg?s=612x612&w=0&k=20&c=wJZPwRe9BEg5_l3LWTI_4mBmYk6MHDxXpGoiFEMEDaE=" },
+      "roof": { url: "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/79603/rooftop-clipart-xl.png" },
+      "sad": { url: "https://media.istockphoto.com/id/1055219634/vector/sad-face-icon-unhappy-face-symbol.jpg?s=612x612&w=0&k=20&c=G1_0M4TD3rxt7WQfSDoBrpVr7k8AsnO0T0ZAtKtkqjs=" },
+      "sister": { url: "https://media.istockphoto.com/id/1326006684/vector/cute-little-girl-say-hello-with-young-sister.jpg?s=612x612&w=0&k=20&c=-agsDu8SWCsGdFC6f4pOxO1Rq7ejKSdyWiH3asSQUUM=" },
+      "stop": { url: "https://media.istockphoto.com/id/1128230184/vector/no-entry-sign.jpg?s=612x612&w=0&k=20&c=npXuHBAk3NJHgDh7cFEaRWHT_gUGnvCb4_MIGAT9FjE=" },
+      "tree": { url: "https://pics.clipartpng.com/midle/Green_Tree_PNG_Clip_Art-2888.png" },
+      "window": { url: "https://i.pinimg.com/474x/39/0a/aa/390aaa0fddc7e538b5a071d4121f875e.jpg" },
+      "yard": { url: "https://thumbs.dreamstime.com/b/wood-fence-backyard-wood-fence-backyard-green-garden-grass-trees-flowers-clouds-115904562.jpg" },
+      "yes": { url: "https://png.pngtree.com/element_pic/17/04/16/e05b5badff5b39f08b77da6be0869657.jpg" },
+      "afraid": { url: "https://thumbs.dreamstime.com/b/man-standing-chair-afraid-rat-76766270.jpg" },
+      "ant": { url: "https://classroomclipart.com/image/static7/preview2/cute-cartoon-ant-clipart-53824.jpg" },
+      "apple": { url: "https://i.etsystatic.com/15835007/r/il/11ce0f/3277472654/il_794xN.3277472654_f3p9.jpg" },
+      "ask": { url: "https://classroomclipart.com/images/gallery/Clipart/School/girl-ask-question-in-classroom-school-clipart.jpg" },
+      "bag": { url: "https://png.pngtree.com/png-vector/20220705/ourmid/pngtree-blue-school-bag-clipart-design-png-image_5683607.png" },
+      "banana": { url: "https://i.etsystatic.com/32486242/r/il/d4e9f8/4740506004/il_794xN.4740506004_iu58.jpg" },
+      "bat": { url: "https://png.pngtree.com/png-clipart/20191120/original/pngtree-lovely-bat-clipart-vector-png-element-png-image_5066344.jpg" },
+      "big": { url: "https://pics.clipartpng.com/midle/Elephant_Large_PNG_Clipart-1047.png" },
+      "book": { url: "https://static.vecteezy.com/system/resources/previews/004/319/237/non_2x/opened-book-with-empty-pages-free-vector.jpg" },
+      "bus": { url: "https://media.istockphoto.com/id/1335029323/vector/yellow-school-bus-front-view-cartoon-style-vector-illustration-flat-isolated-on-white.jpg?s=612x612&w=0&k=20&c=A4BRd_IeKDa9MvKQ1OROhg94aZBsaVBJkjRdEUahIXU=" },
+      "camp": { url: "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/3742095/summer-camp-clipart-xl.png" },
+      "cat": { url: "https://classroomclipart.com/image/static7/preview2/cute-korat-cat-with-long-tail-60390.jpg" },
+      "classroom": { url: "https://png.pngtree.com/png-clipart/20210108/ourmid/pngtree-classroom-clipart-kindergarten-indoor-classroom-png-image_2700960.jpg" },
+      "crayons": { url: "https://clipart-library.com/2023/172-1723010_crayons-image-cute-crayon-clip-art.png" },
+      "cut": { url: "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/59766/sausage-cutting-clipart-md.png" },
+      "desk": { url: "https://t3.ftcdn.net/jpg/00/47/16/96/360_F_47169640_82yK24mr8IcAi0yYoXQjCZI0I6YK45g3.jpg" },
+      "egg": { url: "https://img.freepik.com/free-vector/isolated-chicken-egg-cartoon-style_1308-114362.jpg" },
+      "elephant": { url: "https://classroomclipart.com/images/gallery/Clipart/Animals/Elephant_Clipart/cute-young-elephant-clipart.jpg" },
+      "glue": { url: "https://i.pinimg.com/564x/e3/0d/11/e30d116cfd2715b6b88fb5a3a96303d0.jpg" },
+      "library": { url: "https://www.shutterstock.com/image-vector/interior-design-school-library-illustration-260nw-2114033597.jpg" },
+      "mad": { url: "https://www.pngitem.com/pimgs/m/518-5188828_mad-face-clipart-hd-png-download.png" },
+      "teacher": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg9I3uRHr-NyjOm9gvk6tMSJ1CSq93hmnHVQ&usqp=CAU" },
+      "paper": { url: "https://clipart-library.com/data_images/64750.jpg" },
+      "pen": { url: "https://png.pngtree.com/element_our/20190603/ourmid/pngtree-blue-writing-pen-illustration-image_1427760.jpg" },
+      "pencil": { url: "https://clipart-library.com/new_gallery/pencil-clipart-7.png" },
+      "poster": { url: "https://clipart-library.com/image_gallery/256434.gif" },
+      "read": { url: "https://thumb.ac-illust.com/34/34ccedb31fb1afbf3a69ae6d2afb144c_w.jpeg" },
+      "ruler": { url: "https://www.shutterstock.com/image-vector/vector-cartoon-yellow-ruler-on-600nw-651630670.jpg" },
+      "school": { url: "https://img.freepik.com/free-vector/large-school-building-scene_1308-32058.jpg" },
+      "small": { url: "https://thumbs.dreamstime.com/b/hand-showing-tiny-small-size-sketch-vector-hand-gesture-showing-tiny-small-size-sketch-engraving-vector-illustration-t-shirt-163663231.jpg" },
+      "snake": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrcWjkB_RoW6fCXUtBbXxgo97XhaCkNceANQ&usqp=CAU" },
+      "star": { url: "https://media.istockphoto.com/id/165722288/vector/all-star-gold.jpg?s=612x612&w=0&k=20&c=rQA8rbrNDMqJowsV4PRIXKkltxWCLTMGk7Cb8C2T42c=" },
+      "talk": { url: "https://clipart-library.com/2023/107-1070538_images-people-talking-clipart-best-clip-art.png" },
+      "television": { url: "https://www.shutterstock.com/image-vector/tv-remote-control-flat-illustration-260nw-1378653383.jpg" },
+      "test": { url: "https://tressays.files.wordpress.com/2015/09/test-clip-art-cpa-school-test.png" },
+      "pupil": { url: "https://clipart-library.com/newhp/raised-hand-pupil-clipart-md.png" },
+      "father": { url: "https://img.freepik.com/premium-vector/father-his-cute-little-daughter-happy-fathers-day-cartoon-illustration-isolated-white-backg_723224-1976.jpg" },
+      "friend": { url: "https://clipart-library.com/img1/851029.png" },
+      "house": { url: "https://i.pinimg.com/736x/6a/aa/fe/6aaafefd23a9955c602ca8892d7f77c2.jpg" },
+      "ten": { url: "https://clipart-library.com/data_images/366187.jpg" },
+      "chair": { url: "https://i.pinimg.com/564x/29/6d/8d/296d8d2fd9e652cd717f5591fbe47eff.jpg" },
+      "boy": { url: "https://illustoon.com/photo/4044.png" },
+      "no": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8pdcZ0iO4Ft-3cq8jIjoeW-lY89bg9TtbEQ&usqp=CAU" },
+      "alligator": { url: "https://classroomclipart.com/image/static7/preview2/alligator-cartoon-character-standing-on-back-legs--clipart-55814.jpg" },
+      "cake": { url: "https://png.pngtree.com/png-clipart/20191123/original/pngtree-cute-birthday-cake-vector-illustration-with-pink-color-isolated-on-white-png-image_5194493.jpg" },
+      "woman": { url: "https://thumbs.dreamstime.com/b/young-woman-face-cartoon-young-woman-face-cartoon-vector-illustration-graphic-design-138586440.jpg" },
+      "scissors": { url: "https://classroomclipart.com/image/static7/preview2/schoolscissorscoloricons-60032.jpg" },
+      "clown": { url: "https://clipart-library.com/image_gallery/240300.jpg" },
+      "girl": { url: "https://www.clipartmax.com/png/small/2-25869_jumping-girl-my-cute-graphics-girl.png" },
+      "surprised": { url: "https://cdn.vectorstock.com/i/1000x1000/22/26/girl-character-surprised-because-gift-box-vector-32712226.webp" },
+      "best": { url: "", text: "הכי טוב" },
+      "let's": { url: "", text: "בואו" },
+      "in": { url: "", text: "בתוך" },
+      "near": { url: "", text: "ליד" },
+      "on": { url: "", text: "על" },
+      "under": { url: "", text: "מתחת" },
+      "as": { url: "", text: "כמו" },
+    }
+    ]
+  }
 
 </script>
+
 <body dir="ltr">
-  <center><h1 style="font-size:97px;">
-    <h1 style="font-size:115px; margin: 2px;">
-      <span class="s">N</span>
-      <span class="t">e</span>
-      <span class="u">w</span>
-      <span>&nbsp;</span>
-      <span class="s">w</span>
-      <span class="t">o</span>
-      <span class="u">r</span>
-      <span class="s">d</span>
-      <span class="t">s</span>
-    </h1>
+  <center>
+    <h1 style="font-size:97px;">
+      <h1 style="font-size:115px; margin: 2px;">
+        <span class="s">N</span>
+        <span class="t">e</span>
+        <span class="u">w</span>
+        <span>&nbsp;</span>
+        <span class="s">w</span>
+        <span class="t">o</span>
+        <span class="u">r</span>
+        <span class="s">d</span>
+        <span class="t">s</span>
+      </h1>
   </center>
   <div id="page">
     <div id="container">
@@ -554,11 +563,9 @@ function createTheathers() {
       <span id="next" class="button">⟳</span>
     </div>
     <div id="container2">
-    </div>  
+    </div>
   </div>
   <div id="d"></div>
 </body>
 
 </html>
-
-

@@ -51,16 +51,17 @@
 
     #page {
       display: grid;
-      row-gap: 2rem;
+      row-gap: 4rem;
+      margin-top: 4rem;
+      grid-template-columns: 1fr 8fr 2fr 1fr;
       grid-template-areas: 
-        ". challenges ."
-        ". buttons ."
-        ". answers .";
+        ". challenges buttons ."
+        ". answers answers .";
     }
     #container {
       grid-area: challenges;
       display: grid;
-      grid-template-columns: 1fr 2fr 2fr 7fr;
+      grid-template-columns: 1fr 2fr 7fr 2fr;
       grid-template-rows: auto;
       row-gap:  1rem;
       column-gap: 1em;
@@ -104,8 +105,6 @@
       row-gap: 1rem;
       column-gap: 1em;
       grid-auto-flow: row;
-      margin-left: 3em;
-      margin-right: 3em;
     }
 
     @media screen and (orientation: portrait) {

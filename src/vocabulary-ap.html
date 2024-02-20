@@ -170,8 +170,7 @@
   }
 
   function choose(theater) {
-    // return shuffleStrings(Object.keys(theater)).slice(0, Object.keys(theater).length)
-    return Object.keys(theater)
+    return shuffleStrings(Object.keys(theater)).slice(0, 9)
   }
 
   class Model {
@@ -403,11 +402,11 @@
 
       ansewrZone.appendChild(img)
 
-      const txt = document.createElement('a')
-      txt.innerText = `${at}`
-      txt.setAttribute('href', `https://www.google.com/search?q=${at}+cartoon+style&tbm=isch&`)
-      txt.setAttribute('target', `_blank`)
-      ansewrZone.appendChild(txt)
+      // const txt = document.createElement('a')
+      // txt.innerText = `${at}`
+      // txt.setAttribute('href', `https://www.google.com/search?q=${at}+cartoon+style&tbm=isch&`)
+      // txt.setAttribute('target', `_blank`)
+      // ansewrZone.appendChild(txt)
     })
 
 
@@ -541,8 +540,8 @@
       "add": { url: "add.png" },
       "bathroom": { url: "https://img.freepik.com/premium-vector/modern-bathroom-interior_642458-719.jpg" },
       "bedroom": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCiqMV2hXZNXf-qEdvkNGMf3LxLyKtYm-DKA&usqp=CAU" },
-      "bit": { url: "_" },
-      "bread": { url: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.fr%2Fpin%2F619667229971384522%2F&psig=AOvVaw3aF2ptiI6N6Qv27BYI_XfX&ust=1708262363219000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCPjcgLG7soQDFQAAAAAdAAAAABAE" },
+      // "bit": { url: "_" },
+      "bread": { url: "https://i.pinimg.com/564x/43/df/ec/43dfeca2e04325608021c0dea2e99335.jpg" },
       "dog": { url: "https://static.vecteezy.com/system/resources/previews/004/785/817/original/sitting-beagle-dog-cute-pet-in-cartoon-style-free-vector.jpg" },
       "duck": { url: "https://media.istockphoto.com/id/1335728210/vector/funny-yellow-rubber-ducky.jpg?s=612x612&w=0&k=20&c=jEy2gXe55_-k-eXEPXfNVKxQD7UrFp7jbY7TH3gvEZc=" },
       "fan": { url: "https://media.istockphoto.com/id/1668317212/vector/pink-electric-fan-vector-illustration-in-cartoon-style.jpg?s=612x612&w=0&k=20&c=GPygs4gZKJlSwVMiFL1E1DrHn7qM_8_rQIbaGRBfQeA=" },
@@ -565,22 +564,22 @@
       "last": { url: "אחרון" },
       "leg": { url: "https://t4.ftcdn.net/jpg/01/97/21/61/360_F_197216121_eTIoqeth04sJPTwemAU9CAEC1e2WCsoh.jpg" },
       "lemon": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-gaOjLhpLoJDmCnzYXm3dvpNfQ0egVFjHrA&usqp=CAU" },
-      "let": { url: "_" },
+      // "let": { url: "_" },
       "lion": { url: "https://static.vecteezy.com/system/resources/previews/020/142/892/original/cute-lion-in-cartoon-style-drawing-african-baby-wild-cat-isolated-on-white-background-sweet-tiger-for-kids-poster-and-card-jungle-animal-vector.jpg" },
       "list": { url: "https://static.vecteezy.com/system/resources/previews/004/273/412/original/planning-list-board-cartoon-style-icon-illustration-vector.jpg" },
       "living room" : { url: "https://i.pinimg.com/564x/dc/dd/30/dcdd30fddbddd82ddb427569f09c6911.jpg" },
-      "last": { url: "_" },
-      "man": { url: "_" },
-      "mat": { url: "_" },
+      "last": { text: "אחרון" },
+      "man": { url: "https://img.freepik.com/premium-vector/boy-cartoon-style-isolated-white-background-smiling-man-office-worker-businessman-cartoon-character-vector-illustration_376167-193.jpg?w=900" },
+      "mat": { url: "https://png.pngtree.com/png-clipart/20201212/ourmid/pngtree-mat-clipart-cartoon-floor-mat-png-image_2539511.jpg" },
       "milk": { url: "https://static.vecteezy.com/system/resources/previews/023/798/202/non_2x/cartoon-milk-asian-product-kawaii-anime-design-cartoon-style-vector.jpg" },
-      "not": { url: "_" },
-      "pan": { url: "_" },
-      "pet": { url: "_" },
-      "pizza": { url: "_" },
-      "self": { url: "_" },
-      "wheat": { url: "_" },
-      "zebra": { url: "_" },
-      "zoo": { url: "_" },
+      // "not": { url: "_" },
+      "pan": { url: "https://img.freepik.com/premium-vector/frying-pan-illustration-pan-cartoon-icon_565656-540.jpg?w=1800" },
+      "pet": { text: "חיית מחמד" },
+      "pizza": { url: "https://i.pinimg.com/564x/d1/49/94/d149940ba70c191927875f0c68825c42.jpg" },
+      // "self": { url: "_" },
+      "wheat": { url: "https://img.freepik.com/premium-vector/wheat-spikelet-grain-straw-cartoon-style-detailed-isolated-white-background_191307-1073.jpg?w=1800" },
+      "zebra": { url: "https://img.freepik.com/free-vector/cute-zebra-flat-cartoon-style_1308-112438.jpg?w=1480&t=st=1708411536~exp=1708412136~hmac=cf33e19eedef934da05b554f951d5b71db2a6ab02df9bd2c61e1f212b8943e2f" },
+      "zoo": { url: "https://media.istockphoto.com/id/1226736438/vector/girl-boys-kids-parents-taking-photos-feeding-animals-in-zoo-families-with-children-enjoying.jpg?s=2048x2048&w=is&k=20&c=X9hSBeFUTJXCgcEfpwBG5K0pCAEULI-CmDNyeRXdgdw=" },
     }
     ]
   }

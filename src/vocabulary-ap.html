@@ -28,10 +28,7 @@
     background-color: rgb(130, 0, 22);
   }
 
-
   .button {
-    display: flex;
-    justify-content: center;
     background-color: bisque;
     border-radius: 12px;
     border-style: solid;
@@ -173,7 +170,8 @@
   }
 
   function choose(theater) {
-    return shuffleStrings(Object.keys(theater)).slice(0, 9)
+    // return shuffleStrings(Object.keys(theater)).slice(0, Object.keys(theater).length)
+    return Object.keys(theater)
   }
 
   class Model {
@@ -271,7 +269,7 @@
 
     const challengeWords = participatingWords.slice(0, 2)
 
-    const chosenWords = shuffleStrings(participatingWords)
+    const chosenWords = participatingWords || shuffleStrings(participatingWords)
     const model = new Model(challengeWords)
 
     const container = document.getElementById('container')
@@ -404,6 +402,12 @@
       })
 
       ansewrZone.appendChild(img)
+
+      const txt = document.createElement('a')
+      txt.innerText = `${at}`
+      txt.setAttribute('href', `https://www.google.com/search?q=${at}+cartoon+style&tbm=isch&`)
+      txt.setAttribute('target', `_blank`)
+      ansewrZone.appendChild(txt)
     })
 
 
@@ -534,6 +538,49 @@
       "on": { url: "", text: "על" },
       "under": { url: "", text: "מתחת" },
       "as": { url: "", text: "כמו" },
+      "add": { url: "add.png" },
+      "bathroom": { url: "https://img.freepik.com/premium-vector/modern-bathroom-interior_642458-719.jpg" },
+      "bedroom": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCiqMV2hXZNXf-qEdvkNGMf3LxLyKtYm-DKA&usqp=CAU" },
+      "bit": { url: "_" },
+      "bread": { url: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pinterest.fr%2Fpin%2F619667229971384522%2F&psig=AOvVaw3aF2ptiI6N6Qv27BYI_XfX&ust=1708262363219000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCPjcgLG7soQDFQAAAAAdAAAAABAE" },
+      "dog": { url: "https://static.vecteezy.com/system/resources/previews/004/785/817/original/sitting-beagle-dog-cute-pet-in-cartoon-style-free-vector.jpg" },
+      "duck": { url: "https://media.istockphoto.com/id/1335728210/vector/funny-yellow-rubber-ducky.jpg?s=612x612&w=0&k=20&c=jEy2gXe55_-k-eXEPXfNVKxQD7UrFp7jbY7TH3gvEZc=" },
+      "fan": { url: "https://media.istockphoto.com/id/1668317212/vector/pink-electric-fan-vector-illustration-in-cartoon-style.jpg?s=612x612&w=0&k=20&c=GPygs4gZKJlSwVMiFL1E1DrHn7qM_8_rQIbaGRBfQeA=" },
+      "farm": { url: "https://as2.ftcdn.net/v2/jpg/02/74/97/69/1000_F_274976993_QVPjd2nVtVyPKb2cQSbl6q5P3ghyI4JY.jpg" },
+      "fast": { text: "מהר"},
+      "fat": { url: "https://ih1.redbubble.net/image.4781294566.0887/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg" },
+      "flour": { url: "https://static.vecteezy.com/system/resources/previews/014/223/568/original/open-flour-sack-icon-cartoon-style-vector.jpg" },
+      "gift": { url: "https://i.pinimg.com/736x/b9/f9/4a/b9f94ab66beacea73982e34cce8fda4b.jpg" },
+      "go": { text: "מסכים" },
+      "gorilla": { url: "https://classroomclipart.com/image/static7/preview2/ground-dwelling-cartoon-style-gorilla-primate-clipart-55223.jpg" },
+      "guitar": { url: "https://i.pinimg.com/736x/df/8e/1e/df8e1e5b2ffd49da2de2c15aa9d05938.jpg" },
+      "hand": { url: "https://cdn5.vectorstock.com/i/1000x1000/58/04/hand-raised-icon-simple-style-vector-12365804.jpg" },
+      "hat": { url: "https://thumbs.dreamstime.com/b/fedora-hat-illustration-cartoon-style-cap-icon-simple-clip-art-vector-fedora-hat-illustration-cartoon-style-cap-icon-simple-clip-180203162.jpg" },
+      "hen": { url: "https://classroomclipart.com/image/static7/preview2/cartoon-style-chicken-front-view-flat-design-clip-art-58755.jpg" },
+      "hit": { url: "https://cdn3.vectorstock.com/i/1000x1000/43/92/cricket-player-game-icon-cartoon-style-vector-26634392.jpg" },
+      "igloo": { url: "https://t3.ftcdn.net/jpg/01/66/87/84/360_F_166878477_SgZebbpzK6mFlomxuBJpsQShMFUgrQiA.jpg" },
+      "internet": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs6YGm4jn8ZZLxsv9ntnUq65sTCK5TuyEOrg&usqp=CAU" },
+      "kangaroo": { url: "https://i.pinimg.com/originals/e3/ec/10/e3ec100b77ab329db74893b4bbae0921.jpg" },
+      "kitchen": { url: "https://thumbs.dreamstime.com/z/kitchen-furniture-drawn-linear-flat-style-cartoon-vector-kitchen-furniture-drawn-linear-flat-style-cartoon-vector-167442118.jpg?ct=jpeg" },
+      "last": { url: "אחרון" },
+      "leg": { url: "https://t4.ftcdn.net/jpg/01/97/21/61/360_F_197216121_eTIoqeth04sJPTwemAU9CAEC1e2WCsoh.jpg" },
+      "lemon": { url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-gaOjLhpLoJDmCnzYXm3dvpNfQ0egVFjHrA&usqp=CAU" },
+      "let": { url: "_" },
+      "lion": { url: "https://static.vecteezy.com/system/resources/previews/020/142/892/original/cute-lion-in-cartoon-style-drawing-african-baby-wild-cat-isolated-on-white-background-sweet-tiger-for-kids-poster-and-card-jungle-animal-vector.jpg" },
+      "list": { url: "https://static.vecteezy.com/system/resources/previews/004/273/412/original/planning-list-board-cartoon-style-icon-illustration-vector.jpg" },
+      "living room" : { url: "https://i.pinimg.com/564x/dc/dd/30/dcdd30fddbddd82ddb427569f09c6911.jpg" },
+      "last": { url: "_" },
+      "man": { url: "_" },
+      "mat": { url: "_" },
+      "milk": { url: "https://static.vecteezy.com/system/resources/previews/023/798/202/non_2x/cartoon-milk-asian-product-kawaii-anime-design-cartoon-style-vector.jpg" },
+      "not": { url: "_" },
+      "pan": { url: "_" },
+      "pet": { url: "_" },
+      "pizza": { url: "_" },
+      "self": { url: "_" },
+      "wheat": { url: "_" },
+      "zebra": { url: "_" },
+      "zoo": { url: "_" },
     }
     ]
   }
@@ -559,8 +606,8 @@
     <div id="container">
     </div>
     <div id="button-bar">
-      <span id="check" class="button" style="color: purple">Check</span>
-      <span id="next" class="button">⟳</span>
+      <span id="check" class="button centering" style="color: purple">Check</span>
+      <span id="next" class="button centering">⟳</span>
     </div>
     <div id="container2">
     </div>

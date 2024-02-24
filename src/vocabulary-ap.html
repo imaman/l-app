@@ -268,7 +268,7 @@
 
     const challengeWords = participatingWords.slice(0, 2)
 
-    const chosenWords = participatingWords || shuffleStrings(participatingWords)
+    const chosenWords = shuffleStrings(participatingWords)
     const model = new Model(challengeWords)
 
     const container = document.getElementById('container')

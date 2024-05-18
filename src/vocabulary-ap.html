@@ -159,8 +159,7 @@
     //   }
     // }
 
-    const theaters = createTheathers()
-    render(theaters[Math.trunc(Math.random() * theaters.length)])
+    render(pickTheater(getTheathers()))
   })
 
   function shuffleStrings(strings) {
@@ -430,7 +429,7 @@
   }
 
 
-  function createTheathers() {
+  function getTheathers() {
     const unit4 = {      "arm": { url: "https://www.clker.com/cliparts/M/7/T/X/t/0/left-arm-md.png" },
       "bad": { text: "רע" },
       "dad": { url: "https://clipart-library.com/2023/father-son-clipart-xl.png" },
@@ -462,7 +461,7 @@
       "wind": { url: "https://clipart-library.com/2023/808990b7a11f8beb38dbb8d348d709d1.jpg" },
       "zero": { url: "https://clipart-library.com/8300/2368/Red_Number_Zero_Transparent_PNG_Clip_Art.png" },
   }
-    return [{
+  const unit1To3 = {
       "one": { url: "https://cdn.pixabay.com/photo/2015/04/04/19/13/one-706897_1280.jpg" },
       "two": { url: "https://cdn.pixabay.com/photo/2012/05/04/10/18/two-47085_1280.png" },
       "three": { url: "https://c8.alamy.com/comp/FE0XKN/the-number-three-as-a-polished-golden-object-FE0XKN.jpg" },
@@ -564,7 +563,7 @@
       "best": { url: "", text: "הכי טוב" },
       "let's": { url: "", text: "בואו" },
       "in": { url: "", text: "בתוך" },
-      "near": { url: "", text: "ליד" },
+      "near": { url: "", text: "ליד,קרוב" },
       "on": { url: "", text: "על" },
       "under": { url: "", text: "מתחת" },
       "as": { url: "", text: "כמו" },
@@ -581,7 +580,7 @@
       "fat": { url: "https://ih1.redbubble.net/image.4781294566.0887/flat,750x,075,f-pad,750x1000,f8f8f8.u2.jpg" },
       "flour": { url: "https://static.vecteezy.com/system/resources/previews/014/223/568/original/open-flour-sack-icon-cartoon-style-vector.jpg" },
       "gift": { url: "https://i.pinimg.com/736x/b9/f9/4a/b9f94ab66beacea73982e34cce8fda4b.jpg" },
-      "go": { text: "מסכים" },
+      "go": { text: "לך" },
       "gorilla": { url: "https://classroomclipart.com/image/static7/preview2/ground-dwelling-cartoon-style-gorilla-primate-clipart-55223.jpg" },
       "guitar": { url: "https://i.pinimg.com/736x/df/8e/1e/df8e1e5b2ffd49da2de2c15aa9d05938.jpg" },
       "hand": { url: "https://cdn5.vectorstock.com/i/1000x1000/58/04/hand-raised-icon-simple-style-vector-12365804.jpg" },
@@ -611,10 +610,37 @@
       "wheat": { url: "https://img.freepik.com/premium-vector/wheat-spikelet-grain-straw-cartoon-style-detailed-isolated-white-background_191307-1073.jpg?w=1800" },
       "zebra": { url: "https://img.freepik.com/free-vector/cute-zebra-flat-cartoon-style_1308-112438.jpg?w=1480&t=st=1708411536~exp=1708412136~hmac=cf33e19eedef934da05b554f951d5b71db2a6ab02df9bd2c61e1f212b8943e2f" },
       "zoo": { url: "https://media.istockphoto.com/id/1226736438/vector/girl-boys-kids-parents-taking-photos-feeding-animals-in-zoo-families-with-children-enjoying.jpg?s=2048x2048&w=is&k=20&c=X9hSBeFUTJXCgcEfpwBG5K0pCAEULI-CmDNyeRXdgdw=" },
-      ...unit4,
-    }]
+    }
+
+    return {
+      unit1To3,
+      unit4,
+      unit4dup: unit4,
+      all: {
+        ...unit4,
+        ...unit1To3
+      }
+    }
   }
 
+  function shuffle(arr) {
+    const ret = [...arr]
+    for (let i = ret.length - 1; i >= 0; --i) {
+      const rand = Math.floor(Math.random() * (i + 1))
+      const temp = ret[i]
+      ret[i] = ret[rand]
+      ret[rand] = temp
+    }
+
+    return ret
+  }
+
+
+  function pickTheater(theaters) {    
+    const keys = shuffle(Object.keys(theaters))
+    const k = keys[0]
+    return theaters[k]
+  }
 </script>
 
 <body dir="ltr">
